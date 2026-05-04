@@ -281,6 +281,7 @@ h1, h2, h3, h4 {
 .hero__content {
   max-width: 800px;
   padding: 0 var(--space-lg);
+  padding-bottom: 100px;
   z-index: 2;
   position: relative;
 }
@@ -307,6 +308,9 @@ h1, h2, h3, h4 {
   margin-bottom: var(--space-sm);
   opacity: 0;
   transform: translateY(30px);
+  display: inline-block;
+  padding-right: 0.15em;
+  padding-bottom: 0.1em;
 }
 
 .hero__title-wrap {
