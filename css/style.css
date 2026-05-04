@@ -11,65 +11,47 @@
    9. Projects
    10. Skills
    11. Contact
-   12. Buttons & Shared Components
+   12. Buttons
    13. Utilities
    14. Page Loader
-   15. Responsive
+   15. Stars & Shooting Stars
+   16. Responsive
 ═══════════════════════════════════════════════ */
 
 
-/* ─────────────────────────────────────────────
-   1. CUSTOM PROPERTIES
-───────────────────────────────────────────── */
+/* ─── 1. CUSTOM PROPERTIES ─── */
 :root {
   --accent:        #7C3AED;
   --accent-light:  #9D5FF5;
   --accent-glow:   rgba(124, 58, 237, 0.35);
   --accent-subtle: rgba(124, 58, 237, 0.08);
-
   --bg:            #08080F;
   --bg-elevated:   #0F0F1A;
   --bg-card:       #12121F;
   --border:        rgba(255, 255, 255, 0.07);
-
   --text-primary:  #F0EEFF;
   --text-secondary:#A89EC4;
   --text-muted:    #5B5378;
-
   --font-display:  'Syne', sans-serif;
   --font-body:     'Inter', sans-serif;
-
   --space-xs:  0.5rem;
   --space-sm:  1rem;
   --space-md:  2rem;
   --space-lg:  4rem;
   --space-xl:  8rem;
-
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
-
   --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in:   cubic-bezier(0.7, 0, 0.84, 0);
-
   --nav-h: 70px;
 }
 
 
-/* ─────────────────────────────────────────────
-   2. RESET & BASE
-───────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ─── 2. RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-  cursor: none;
-}
+html { font-size: 16px; scroll-behavior: smooth; cursor: none; }
 
 body {
   font-family: var(--font-body);
@@ -83,20 +65,15 @@ body {
 
 body::-webkit-scrollbar { width: 4px; }
 body::-webkit-scrollbar-track { background: transparent; }
-body::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 10px;
-}
+body::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
 img { max-width: 100%; display: block; }
-a  { color: inherit; text-decoration: none; }
-ul { list-style: none; }
+a   { color: inherit; text-decoration: none; }
+ul  { list-style: none; }
 button { font-family: inherit; cursor: none; border: none; background: none; }
 
 
-/* ─────────────────────────────────────────────
-   3. TYPOGRAPHY
-───────────────────────────────────────────── */
+/* ─── 3. TYPOGRAPHY ─── */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 800;
@@ -112,14 +89,10 @@ h1, h2, h3, h4 {
 }
 
 
-/* ─────────────────────────────────────────────
-   4. CUSTOM CURSOR
-───────────────────────────────────────────── */
-.cursor-dot,
-.cursor-outline {
+/* ─── 4. CUSTOM CURSOR ─── */
+.cursor-dot, .cursor-outline {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   pointer-events: none;
   z-index: 9999;
   border-radius: 50%;
@@ -127,15 +100,10 @@ h1, h2, h3, h4 {
   transition: opacity 0.3s;
 }
 
-.cursor-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-}
+.cursor-dot { width: 8px; height: 8px; background: var(--accent); }
 
 .cursor-outline {
-  width: 36px;
-  height: 36px;
+  width: 36px; height: 36px;
   border: 1.5px solid var(--accent-light);
   transition: transform 0.12s var(--ease-out),
               width 0.3s var(--ease-out),
@@ -144,8 +112,7 @@ h1, h2, h3, h4 {
 }
 
 .cursor-outline.is-hovering {
-  width: 56px;
-  height: 56px;
+  width: 56px; height: 56px;
   border-color: var(--accent);
   background: var(--accent-glow);
 }
@@ -156,14 +123,10 @@ h1, h2, h3, h4 {
 }
 
 
-/* ─────────────────────────────────────────────
-   5. NAVIGATION
-───────────────────────────────────────────── */
+/* ─── 5. NAVIGATION ─── */
 .nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: var(--nav-h);
   display: flex;
   align-items: center;
@@ -187,10 +150,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.03em;
 }
 
-.nav__links {
-  display: flex;
-  gap: var(--space-md);
-}
+.nav__links { display: flex; gap: var(--space-md); }
 
 .nav__link {
   font-size: 0.875rem;
@@ -203,18 +163,15 @@ h1, h2, h3, h4 {
 .nav__link::after {
   content: '';
   position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 1.5px;
+  bottom: -3px; left: 0;
+  width: 0; height: 1.5px;
   background: var(--accent);
   transition: width 0.3s var(--ease-out);
 }
 
-.nav__link:hover { color: var(--text-primary); }
+.nav__link:hover       { color: var(--text-primary); }
 .nav__link:hover::after { width: 100%; }
-
-.nav__link.is-active { color: var(--text-primary); }
+.nav__link.is-active   { color: var(--text-primary); }
 .nav__link.is-active::after { width: 100%; }
 
 .nav__hamburger {
@@ -226,34 +183,23 @@ h1, h2, h3, h4 {
 
 .nav__hamburger span {
   display: block;
-  width: 24px;
-  height: 2px;
+  width: 24px; height: 2px;
   background: var(--text-primary);
   border-radius: 2px;
   transition: transform 0.35s var(--ease-out),
               opacity  0.35s var(--ease-out);
 }
 
-.nav__hamburger.is-open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
-}
-.nav__hamburger.is-open span:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-}
-.nav__hamburger.is-open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
-}
+.nav__hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav__hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav__hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 
-/* ─────────────────────────────────────────────
-   6. SCROLL CONTAINER & SECTIONS
-───────────────────────────────────────────── */
+/* ─── 6. SCROLL CONTAINER & SECTIONS ─── */
 .scroll-container {
-  height: 100vh;
   height: 100dvh;
   overflow-y: scroll;
-  scroll-snap-type: y proximity;
+  /* scroll snap removed — free scrolling */
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -261,10 +207,9 @@ h1, h2, h3, h4 {
 .scroll-container::-webkit-scrollbar { display: none; }
 
 .section {
-  height: 100vh;
-  height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  /* min-height instead of fixed height — content can grow */
+  min-height: 100dvh;
+  height: auto;
   position: relative;
   display: flex;
   align-items: center;
@@ -276,12 +221,12 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 1200px;
   padding: calc(var(--nav-h) + var(--space-lg)) var(--space-lg) var(--space-lg);
+  position: relative;
+  z-index: 2;
 }
 
 
-/* ─────────────────────────────────────────────
-   7. HERO
-───────────────────────────────────────────── */
+/* ─── 7. HERO ─── */
 .hero__content {
   max-width: 800px;
   padding: 0 var(--space-lg);
@@ -356,8 +301,7 @@ h1, h2, h3, h4 {
 
 .hero__orb {
   position: absolute;
-  top: 50%;
-  right: -5%;
+  top: 50%; right: -5%;
   transform: translateY(-50%);
   width: min(600px, 80vw);
   height: min(600px, 80vw);
@@ -369,6 +313,7 @@ h1, h2, h3, h4 {
   );
   pointer-events: none;
   animation: orb-breathe 6s ease-in-out infinite;
+  z-index: 1;
 }
 
 @keyframes orb-breathe {
@@ -389,11 +334,11 @@ h1, h2, h3, h4 {
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  z-index: 2;
 }
 
 .scroll-hint__line {
-  width: 1px;
-  height: 50px;
+  width: 1px; height: 50px;
   background: linear-gradient(to bottom, var(--text-muted), transparent);
   animation: scroll-line 2s ease-in-out infinite;
 }
@@ -405,9 +350,67 @@ h1, h2, h3, h4 {
 }
 
 
+/* ─── 8. ABOUT ─── */
+
+/* Background slideshow */
 /* ─────────────────────────────────────────────
-   8. ABOUT
+   ABOUT ME CINEMATIC BANNER
 ───────────────────────────────────────────── */
+.about__slideshow {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.about__slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 2s ease-in-out; 
+  
+  /* NEW: Strips normal colors and tints it with your accent vibe */
+  filter: grayscale(100%) contrast(1.2) brightness(0.7) sepia(50%) hue-rotate(220deg);
+}
+
+/* When a slide becomes active, it fades in and slowly zooms in */
+.about__slide.is-active {
+  opacity: 1;
+  animation: slowZoom 10s linear forwards;
+}
+
+@keyframes slowZoom {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.15); } /* Zooms in 15% over 10 seconds */
+}
+
+/* Ensure the overlay darkens the images enough so your text is readable */
+.about__overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  /* Creates the dark fade AND the high-tech terminal scanlines */
+  background: 
+    linear-gradient(to right, var(--bg) 10%, rgba(8, 8, 15, 0.5) 100%),
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.35) 2px,
+      rgba(0, 0, 0, 0.35) 4px
+    );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Content above overlay */
+#about .section__inner { z-index: 2; }
+
 .about__grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -422,8 +425,7 @@ h1, h2, h3, h4 {
 }
 
 .about__avatar {
-  width: 280px;
-  height: 280px;
+  width: 280px; height: 280px;
   border-radius: var(--radius-lg);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -435,11 +437,7 @@ h1, h2, h3, h4 {
   justify-content: center;
 }
 
-.about__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.about__img { width: 100%; height: 100%; object-fit: cover; }
 
 .about__avatar-fallback {
   display: none;
@@ -465,26 +463,113 @@ h1, h2, h3, h4 {
   margin-bottom: var(--space-md);
   line-height: 1.9;
 }
-
-.about__facts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.about__facts li {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  padding: var(--space-xs) var(--space-sm);
-  background: var(--accent-subtle);
-  border-radius: var(--radius-sm);
-  border-left: 2px solid var(--accent);
-}
-
-
 /* ─────────────────────────────────────────────
-   9. PROJECTS
+   ULTIMATE CYBERPUNK TERMINAL BADGE (BULLETPROOF)
 ───────────────────────────────────────────── */
+.about__fact-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.8rem 1.5rem;
+  margin-top: 1.5rem;
+  
+  /* FORCE VISIBILITY & FRONT PLACEMENT */
+  z-index: 50 !important; 
+  opacity: 1 !important;  
+  visibility: visible !important;
+  color: var(--text-primary); /* Ensures text isn't blending into the background */
+  
+  /* Dark Glass + Tactical Blueprint Grid */
+  background-color: rgba(12, 12, 20, 0.6); 
+  background-image: 
+    linear-gradient(rgba(124, 58, 237, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+  background-size: 15px 15px; 
+  
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  border-radius: 8px;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.4), 
+    0 0 15px rgba(124, 58, 237, 0.15), 
+    inset 0 0 10px rgba(124, 58, 237, 0.05);
+    
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  cursor: crosshair; 
+}
+
+/* Forces the text INSIDE the badge to sit above the glass and sweep effect */
+.about__fact-wrap > * {
+  position: relative;
+  z-index: 5;
+}
+
+/* 1. The "Live Uplink" Pulsing Dot */
+.about__fact-wrap::before {
+  content: '';
+  display: inline-block;
+  position: relative;
+  z-index: 5;
+  width: 8px; height: 8px;
+  min-width: 8px; 
+  background-color: #10B981; 
+  border-radius: 50%;
+  margin-right: 12px;
+  box-shadow: 0 0 10px #10B981;
+  animation: uplink-pulse 1.5s infinite;
+}
+
+/* 2. The "System Override" Hover State */
+.about__fact-wrap:hover {
+  border-color: #06B6D4; 
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5), 
+    0 0 20px rgba(6, 182, 212, 0.3), 
+    inset 0 0 15px rgba(6, 182, 212, 0.15);
+  transform: translateY(-2px); 
+}
+
+.about__fact-wrap:hover::before {
+  background-color: #06B6D4;
+  box-shadow: 0 0 12px #06B6D4;
+  animation: uplink-pulse 0.4s infinite; 
+}
+
+/* 3. The "Scanner Glare" Effect */
+.about__fact-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  z-index: 1; /* Ensures the glare stays behind the text */
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(124, 58, 237, 0.15),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: badge-scan 5s infinite;
+  pointer-events: none;
+}
+
+@keyframes badge-scan {
+  0% { left: -100%; }
+  15% { left: 200%; } 
+  100% { left: 200%; } 
+}
+
+@keyframes uplink-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+
+/* ─── 9. PROJECTS ─── */
 .projects__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -516,9 +601,8 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-.project-card:hover { border-color: var(--accent); }
-.project-card:hover::before { opacity: 1; }
-.project-card:hover { box-shadow: 0 0 40px var(--accent-glow); }
+.project-card:hover               { border-color: var(--accent); box-shadow: 0 0 40px var(--accent-glow); }
+.project-card:hover::before       { opacity: 1; }
 
 .project-card__top {
   display: flex;
@@ -534,17 +618,13 @@ h1, h2, h3, h4 {
   letter-spacing: 0.1em;
 }
 
-.project-card__links {
-  display: flex;
-  gap: var(--space-xs);
-}
+.project-card__links { display: flex; gap: var(--space-xs); }
 
 .icon-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   border-radius: var(--radius-sm);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -560,11 +640,7 @@ h1, h2, h3, h4 {
   background: var(--accent-subtle);
 }
 
-.project-card__title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
+.project-card__title { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
 
 .project-card__desc {
   font-size: 0.875rem;
@@ -573,12 +649,7 @@ h1, h2, h3, h4 {
   flex: 1;
 }
 
-.project-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: auto;
-}
+.project-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
 
 .tag {
   font-size: 0.7rem;
@@ -592,54 +663,98 @@ h1, h2, h3, h4 {
 }
 
 
+/* ─── 10. SKILLS ─── */
+
+/* Filter tabs */
+.skills__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space-md);
+}
+
+.skill-tab {
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.skill-tab:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.skill-tab.is-active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
 /* ─────────────────────────────────────────────
-   10. SKILLS
+   SKILLS GLASS CARDS
 ───────────────────────────────────────────── */
-.skills__groups {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-lg);
+.skill-group {
+  /* The Glass Effect */
+  background: rgba(255, 255, 255, 0.02); /* Extremely faint white */
+  backdrop-filter: blur(10px);           /* Frosted glass blur */
+  -webkit-backdrop-filter: blur(10px);   /* Safari support */
+  
+  /* Borders and Spacing */
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  
+  /* Smooth hover animation */
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Make it pop when the user hovers over the card */
+.skill-group:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-glow);
+  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.1); /* Subtle purple glow */
 }
 
 .skill-group__label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: var(--space-sm);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
 }
 
+/* Style the individual skill tags */
 .skill-group__badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 0.75rem;
 }
 
 .badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 50px; /* Pill shape */
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  transition: color 0.3s, border-color 0.3s, background 0.3s, transform 0.3s;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Tag lights up purple on hover */
 .badge:hover {
-  color: var(--text-primary);
+  color: #fff;
   border-color: var(--accent);
   background: var(--accent-subtle);
-  transform: translateY(-2px);
 }
 
 
-/* ─────────────────────────────────────────────
-   11. CONTACT
-───────────────────────────────────────────── */
+/* ─── 11. CONTACT ─── */
 .contact__sub {
   color: var(--text-secondary);
   margin-top: -3rem;
@@ -654,17 +769,9 @@ h1, h2, h3, h4 {
   align-items: start;
 }
 
-.contact__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
+.contact__form { display: flex; flex-direction: column; gap: var(--space-sm); }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.form-group { display: flex; flex-direction: column; gap: 6px; }
 
 .form-group label {
   font-size: 0.8rem;
@@ -690,9 +797,7 @@ h1, h2, h3, h4 {
 }
 
 .form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--text-muted);
-}
+.form-group textarea::placeholder { color: var(--text-muted); }
 
 .form-group input:focus,
 .form-group textarea:focus {
@@ -740,9 +845,7 @@ h1, h2, h3, h4 {
 #contact .section__inner { position: relative; z-index: 1; }
 
 
-/* ─────────────────────────────────────────────
-   12. BUTTONS
-───────────────────────────────────────────── */
+/* ─── 12. BUTTONS ─── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -753,9 +856,7 @@ h1, h2, h3, h4 {
   font-size: 0.9rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  transition: transform 0.2s var(--ease-out),
-              box-shadow 0.2s,
-              background 0.2s;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s, background 0.2s;
   position: relative;
   overflow: hidden;
 }
@@ -779,9 +880,7 @@ h1, h2, h3, h4 {
   box-shadow: 0 4px 24px var(--accent-glow);
 }
 
-.btn--primary:hover {
-  box-shadow: 0 8px 32px var(--accent-glow);
-}
+.btn--primary:hover { box-shadow: 0 8px 32px var(--accent-glow); }
 
 .btn--outline {
   background: transparent;
@@ -789,17 +888,11 @@ h1, h2, h3, h4 {
   border: 1.5px solid var(--border);
 }
 
-.btn--outline:hover {
-  border-color: var(--accent);
-  color: var(--accent-light);
-}
-
+.btn--outline:hover { border-color: var(--accent); color: var(--accent-light); }
 .btn--full { width: 100%; }
 
 
-/* ─────────────────────────────────────────────
-   13. UTILITIES
-───────────────────────────────────────────── */
+/* ─── 13. UTILITIES ─── */
 .visually-hidden {
   position: absolute;
   width: 1px; height: 1px;
@@ -829,7 +922,7 @@ h1, h2, h3, h4 {
 
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0);    }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .footer {
@@ -839,6 +932,8 @@ h1, h2, h3, h4 {
   font-size: 0.8rem;
   border-top: 1px solid var(--border);
   background: var(--bg);
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes particle-float {
@@ -848,9 +943,7 @@ h1, h2, h3, h4 {
 }
 
 
-/* ─────────────────────────────────────────────
-   14. PAGE LOADER  ← this was missing entirely
-───────────────────────────────────────────── */
+/* ─── 14. PAGE LOADER ─── */
 .loader {
   position: fixed;
   inset: 0;
@@ -859,15 +952,10 @@ h1, h2, h3, h4 {
   align-items: center;
   justify-content: center;
   z-index: 9998;
-  transition: opacity 0.6s var(--ease-out),
-              visibility 0.6s;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s;
 }
 
-.loader.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
+.loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .loader__logo {
   font-family: var(--font-display);
@@ -879,20 +967,141 @@ h1, h2, h3, h4 {
 
 @keyframes loader-pulse {
   from { opacity: 0.2; transform: scale(0.96); }
-  to   { opacity: 1;   transform: scale(1);    }
+  to   { opacity: 1;   transform: scale(1); }
+}
+
+/* ─────────────────────────────────────────────
+   NEBULA BACKGROUND
+───────────────────────────────────────────── */
+.nebula-bg {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* Forces it to sit behind EVERYTHING on your site */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nebula-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px); /* This heavy blur turns the circles into glowing gas */
+  opacity: 0.6;
+  animation: nebula-drift infinite alternate ease-in-out;
+}
+
+/* Violet accent blob (Top Left) */
+.blob-1 {
+  width: 60vw;
+  height: 60vw;
+  background: var(--accent-glow); /* Uses your existing purple accent! */
+  top: -10%;
+  left: -10%;
+  animation-duration: 25s;
+}
+
+/* Deep blue blob (Bottom Right) */
+.blob-2 {
+  width: 70vw;
+  height: 70vw;
+  background: rgba(20, 40, 150, 0.4); /* Deep space blue */
+  bottom: -20%;
+  right: -10%;
+  animation-duration: 32s;
+  animation-delay: -5s;
+}
+
+/* Lighter purple blob (Center) */
+.blob-3 {
+  width: 50vw;
+  height: 50vw;
+  background: rgba(157, 95, 245, 0.2); 
+  top: 30%;
+  left: 20%;
+  animation-duration: 28s;
+  animation-delay: -12s;
+}
+
+@keyframes nebula-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8; /* Pulses slightly brighter */
+  }
+  100% {
+    transform: translate(8vw, -8vh) scale(1.15); /* Slowly drifts and expands */
+    opacity: 0.5;
+  }
 }
 
 
-/* ─────────────────────────────────────────────
-   15. RESPONSIVE
-───────────────────────────────────────────── */
-@media (max-width: 900px) {
-  :root {
-    --space-lg: 2rem;
-    --space-xl: 3rem;
-  }
+/* ─── 15. STARS & SHOOTING STARS ─── */
+.starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
 
-  /* ── Nav ── */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+}
+
+@keyframes star-twinkle {
+  0%   { opacity: var(--star-opacity, 0.5); transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(0.4); }
+}
+
+.shooting-star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: shooting 6s linear forwards;
+  z-index: 1;
+}
+
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  transform: translateY(-50%);
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(to left, rgba(255,255,255,0.85), transparent);
+}
+
+@keyframes shooting {
+  0% { 
+    transform: rotate(45deg) translateX(-50px); 
+    opacity: 0; /* Starts completely invisible */
+  }
+  20% { 
+    opacity: 1; /* Smoothly fades in over the first 20% of its journey */
+  }
+  80% { 
+    opacity: 1; /* Stays bright while crossing the screen */
+  }
+  100% { 
+    transform: rotate(45deg) translateX(2500px); 
+    opacity: 0; /* Smoothly fades out to invisible before the animation ends */
+  }
+}
+
+
+/* ─── 16. RESPONSIVE ─── */
+@media (max-width: 900px) {
+  :root { --space-lg: 2rem; --space-xl: 3rem; }
+
   .nav { padding: 0 var(--space-md); }
   .nav__links { display: none; }
   .nav__hamburger { display: flex; }
@@ -902,8 +1111,7 @@ h1, h2, h3, h4 {
     flex-direction: column;
     position: fixed;
     top: var(--nav-h);
-    left: 0;
-    right: 0;
+    left: 0; right: 0;
     background: rgba(8, 8, 15, 0.97);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -913,158 +1121,147 @@ h1, h2, h3, h4 {
     z-index: 99;
   }
 
-  .nav__link {
-    font-size: 1.1rem;
-    padding: 0.5rem 0;
-  }
+  .nav__link { font-size: 1.1rem; padding: 0.5rem 0; }
 
-  /* ── Sections: allow taller than screen on mobile ── */
-  /* Fixed height clips content — switch to min-height */
-  .section {
-    height: auto;
-    min-height: 100dvh;
-    overflow: visible;
-  }
-
-  /* Scroll container still handles snapping */
-  .scroll-container {
-    height: 100dvh;
-    overflow-y: scroll;
-    scroll-snap-type: y proximity;
-  }
+  .section { min-height: 100dvh; overflow: visible; }
 
   .section__inner {
     padding: calc(var(--nav-h) + 1.5rem) var(--space-md) var(--space-md);
     overflow: visible;
   }
 
-  /* Section titles */
   .section__title {
     font-size: clamp(2rem, 8vw, 3rem);
     margin-bottom: var(--space-md);
   }
 
-  /* ── Hero ── */
-  .hero__content {
-    padding: 0 var(--space-md);
-    padding-bottom: 80px;
-  }
-
-  .hero__name { font-size: clamp(2.8rem, 11vw, 4rem); }
-  .hero__bio  { font-size: 0.95rem; }
-
-  .hero__cta { flex-direction: column; gap: 0.75rem; }
+  /* Hero */
+  .hero__content { padding: 0 var(--space-md); padding-bottom: 80px; }
+  .hero__name    { font-size: clamp(2.8rem, 11vw, 4rem); }
+  .hero__bio     { font-size: 0.95rem; }
+  .hero__cta     { flex-direction: column; gap: 0.75rem; }
   .hero__cta .btn { width: 100%; text-align: center; }
+  .hero__orb     { width: 300px; height: 300px; right: -20%; opacity: 0.5; }
 
-  .hero__orb {
-    width: 300px;
-    height: 300px;
-    right: -20%;
-    opacity: 0.5;
+  /* About */
+  .about__grid           { grid-template-columns: 1fr; gap: var(--space-md); text-align: center; }
+  .about__avatar         { width: 200px; height: 200px; margin: 0 auto; }
+  .about__fact-wrap      { text-align: left; }
+  .about__fact-text      { white-space: normal; }
+
+  /* Projects */
+  .projects__grid { grid-template-columns: 1fr; gap: 1rem; }
+  #projects .section__inner { padding-bottom: 2rem; }
+
+  /* Constellation Canvas Background */
+  #skills {
+    position: relative; 
+    width: 100%;
+    overflow: hidden; /* Prevents the canvas from accidentally stretching the page width */
   }
 
-  /* ── About ── */
-  .about__grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-    text-align: center;
+  #constellationCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; 
+    pointer-events: none; 
+    display: block; /* Canvases are inline by default, this fixes spacing bugs */
   }
 
-  .about__avatar { width: 200px; height: 200px; margin: 0 auto; }
-  .about__facts  { text-align: left; }
-  .about__facts li { font-size: 0.875rem; }
-
-  /* ── Projects: stack cards, allow section to grow ── */
-  .projects__grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  /* Ensure the text sits above the canvas and stays centered */
+  #skills .section__inner {
+    position: relative;
+    z-index: 2; 
+    width: 100%;       /* Prevents the container from shrinking */
+    margin: 0 auto;    /* Forces it back to the center of the page */
   }
 
-  /* Ensure all 3 cards are visible — no clipping */
-  #projects .section__inner {
-    padding-bottom: 2rem;
-  }
-
-  /* ── Skills: fix gap between label and badges ── */
-  .skills__groups {
-    grid-template-columns: 1fr;
-    gap: 0; /* remove the big gap between groups */
-  }
-
+  /* Skills */
+  .skills__groups { grid-template-columns: 1fr; gap: 0; }
   .skill-group {
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--border);
     margin-bottom: 1.25rem;
   }
+  .skill-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .skills__tabs { gap: 0.4rem; }
+  .skill-tab { padding: 6px 14px; font-size: 0.75rem; }
 
-  .skill-group:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
+  /* Contact */
+  .contact__layout { grid-template-columns: 1fr; gap: var(--space-md); }
+  .contact__sub { font-size: 0.95rem; margin-top: -1.5rem; }
+  .contact__socials { padding: 0; width: 100%; }
+  .social-link { width: 100%; padding: 0.875rem 1rem; font-size: 0.875rem; }
+  #contact .section__inner { padding-bottom: 2rem; }
+  .contact__particles { display: none; }
 
-  .skill-group__label {
-    margin-bottom: 0.75rem; /* tighter gap between label and its badges */
-  }
-
-  /* ── Contact ── */
-  .contact__layout {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-  }
-
-  .contact__sub {
-    font-size: 0.95rem;
-    margin-top: -1.5rem;
-  }
-
-  /* Fix social links pushed to the left */
-  .contact__socials {
-    padding: 0; /* remove left padding offset */
-    width: 100%;
-  }
-
-  .social-link {
-    width: 100%;
-    padding: 0.875rem 1rem; /* tighter padding so badge doesn't clip */
-    font-size: 0.875rem;
-  }
-
-  /* Prevent contact section from clipping */
-  #contact .section__inner {
-    padding-bottom: 2rem;
-  }
-
-  .contact__particles {
-    display: none; /* hide particles on mobile — performance + layout */
-  }
+  /* Stars — fewer on mobile for performance */
+  .starfield { opacity: 0.6; }
 }
 
 @media (max-width: 480px) {
   .hero__name { font-size: clamp(2.4rem, 12vw, 3rem); }
-
-  .hero__title-wrap {
-    font-size: clamp(1rem, 5vw, 1.3rem);
-    flex-wrap: wrap;
-  }
-
+  .hero__title-wrap { font-size: clamp(1rem, 5vw, 1.3rem); flex-wrap: wrap; }
   .project-card { padding: 1rem; }
-
   .badge { font-size: 0.78rem; padding: 6px 12px; }
   .btn   { padding: 12px 24px; font-size: 0.875rem; }
-
   .about__avatar { width: 160px; height: 160px; }
+  .social-link { padding: 0.75rem 1rem; font-size: 0.8rem; gap: 10px; }
+  .social-link svg { width: 18px; height: 18px; }
+}
 
-  /* Social links full width, no overflow */
-  .social-link {
-    padding: 0.75rem 1rem;
-    font-size: 0.8rem;
-    gap: 10px;
-  }
+/* ─────────────────────────────────────────────
+   SKILLS SECTION & CANVAS ALIGNMENT FIX
+───────────────────────────────────────────── */
+#skills {
+  position: relative !important; 
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100vw !important;
+  overflow: hidden !important; 
+}
 
-  .social-link svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
+#constellationCanvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important; 
+  pointer-events: none !important; 
+}
+
+#skills .section__inner {
+  position: relative !important;
+  z-index: 2 !important; 
+  width: 100% !important;       
+  max-width: 1200px !important; 
+  margin: 0 auto !important;    
+}
+
+/* ─────────────────────────────────────────────
+   CYBERPUNK DECRYPT EFFECT
+───────────────────────────────────────────── */
+.scramble-text {
+  display: inline-block;
+  font-family: var(--font-display);
+  color: var(--accent-light);
+  text-shadow: 0 0 8px var(--accent-glow);
+  min-width: 220px; /* Prevents text jumping */
+}
+
+/* The blinking terminal cursor */
+.cursor-blink {
+  display: inline-block;
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }

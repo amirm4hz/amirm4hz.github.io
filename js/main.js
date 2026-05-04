@@ -159,3 +159,227 @@ if (contactForm) {
     }
   });
 }
+
+/* ─────────────────────────────────────────────
+   SKILLS CONSTELLATION WEB
+───────────────────────────────────────────── */
+function initConstellation() {
+  const canvas = document.getElementById("constellationCanvas");
+  const skillsSection = document.getElementById("skills");
+  if (!canvas || !skillsSection) return;
+
+  const ctx = canvas.getContext("2d");
+  let width, height;
+  let particles = [];
+  
+  // Track mouse coordinates relative to the skills section
+  let mouse = { x: -1000, y: -1000 };
+
+  // Adjust canvas size to match the section exactly
+  function resize() {
+    width = skillsSection.offsetWidth;
+    height = skillsSection.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+    initParticles();
+  }
+
+  // Create the background nodes (stars)
+  function initParticles() {
+    particles = [];
+    // Adjust the number of nodes based on screen size so it isn't too cluttered on mobile
+    const numParticles = Math.floor((width * height) / 15000); 
+    
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5, // Slow drift speed
+        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 1.5 + 0.5
+      });
+    }
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  // Track the mouse only when it's over the skills section
+  skillsSection.addEventListener("mousemove", (e) => {
+    const rect = skillsSection.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  skillsSection.addEventListener("mouseleave", () => {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
+
+  // The Animation Loop
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i++) {
+      let p = particles[i];
+
+      // Move particles
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Bounce off edges smoothly
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+
+      // Draw the node (star)
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(124, 58, 237, 0.5)"; // Deep purple
+      ctx.fill();
+
+      // Check distance to mouse
+      let dxMouse = mouse.x - p.x;
+      let dyMouse = mouse.y - p.y;
+      let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+      // If mouse is near, draw a bright line connecting to it
+      if (distMouse < 200) {
+        ctx.beginPath();
+        // The closer the mouse, the more opaque the line
+        ctx.strokeStyle = `rgba(157, 95, 245, ${1 - distMouse / 200})`; 
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.stroke();
+      }
+
+      // Check distance to other nodes to create the "web"
+      for (let j = i + 1; j < particles.length; j++) {
+        let p2 = particles[j];
+        let dx = p.x - p2.x;
+        let dy = p.y - p2.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Connect nearby nodes with faint, subtle lines
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(124, 58, 237, ${0.2 - dist / 600})`; 
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+}
+
+// Start the effect shortly after the page loads
+window.addEventListener("load", () => {
+  setTimeout(initConstellation, 300);
+});
+
+/* ─────────────────────────────────────────────
+   SKILLS FILTERING
+───────────────────────────────────────────── */
+const skillTabs = document.querySelectorAll('.skill-tab');
+const skillGroups = document.querySelectorAll('.skill-group');
+
+skillTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    // 1. Remove active state from all tabs, add to the clicked one
+    skillTabs.forEach(t => t.classList.remove('is-active'));
+    tab.classList.add('is-active');
+
+    const filter = tab.getAttribute('data-filter');
+
+    // 2. Filter the groups
+    skillGroups.forEach(group => {
+      const category = group.getAttribute('data-category');
+      
+      if (filter === 'all' || filter === category) {
+        group.style.display = 'block'; // Show it
+        // Add a smooth fade-in using your existing GSAP
+        gsap.fromTo(group, 
+          { opacity: 0, y: 10 }, 
+          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
+        );
+      } else {
+        group.style.display = 'none'; // Hide it
+      }
+    });
+  });
+});
+
+/* ─────────────────────────────────────────────
+   CLEAN TEXT SCRAMBLER (ABOUT ME) - EMOJI SAFE
+───────────────────────────────────────────── */
+const scrambleElement = document.getElementById('aboutFactText');
+
+if (scrambleElement) {
+  const words = [
+    "[SYS.EDU] B.E. (Hons) Computer Engineering @ UoA",
+    "[SYS.ACT] Executing: striker.exe // Albany United FC",
+    "[SYS.JOB] Mathematics Tutor // NumberWorks'nWords",
+    "[SYS.LOC] Origin: Auckland, New Zealand [::1]",
+    "[SYS.PWR] Primary Fuel: Celsius & Coffee"
+  ];
+  
+  let wordIndex = 0;
+
+  function scrambleWord(newWord) {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01"; 
+    let iterations = 0;
+    
+    // Array.from() prevents emojis from being sliced in half and breaking
+    const wordArray = Array.from(newWord); 
+    
+    const interval = setInterval(() => {
+      scrambleElement.innerText = wordArray
+        .map((letter, index) => {
+          if (index < iterations) return wordArray[index]; 
+          
+          // Only scramble standard letters and numbers. Leave spaces, emojis, and punctuation alone!
+          if (!/[a-zA-Z0-9]/.test(wordArray[index])) return wordArray[index];
+          
+          return chars[Math.floor(Math.random() * chars.length)];
+        })
+        .join("");
+      
+      if (iterations >= wordArray.length) {
+        clearInterval(interval);
+      }
+      
+      iterations += 1; // Speed of the reveal
+    }, 30); 
+  }
+
+  // Waits 8 FULL SECONDS before scrambling to the next fact
+  setInterval(() => {
+    wordIndex = (wordIndex + 1) % words.length;
+    scrambleWord(words[wordIndex]);
+  }, 5000); 
+}
+
+/* ─────────────────────────────────────────────
+   ABOUT ME BANNER / SLIDESHOW AUTOMATION
+───────────────────────────────────────────── */
+const slides = document.querySelectorAll('.about__slide');
+
+if (slides.length > 1) {
+  let currentSlide = 0;
+
+  setInterval(() => {
+    // Remove active class from current image
+    slides[currentSlide].classList.remove('is-active');
+    
+    // Move to the next image (loop back to start if at the end)
+    currentSlide = (currentSlide + 1) % slides.length;
+    
+    // Add active class to new image to trigger the fade and zoom
+    slides[currentSlide].classList.add('is-active');
+  }, 6000); // Changes the banner image every 6 seconds
+}
