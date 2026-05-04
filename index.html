@@ -19,6 +19,11 @@
 
   <body>
 
+    <!-- PAGE LOADER -->
+    <div class="loader" id="loader">
+      <span class="loader__logo">AM<span class="accent">.</span></span>
+    </div>
+
     <!-- CUSTOM CURSOR -->
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-outline" id="cursorOutline"></div>
@@ -257,7 +262,7 @@
             <form
               class="contact__form"
               id="contactForm"
-              action="https://formspree.io/f/YOUR_FORM_ID"
+              action="https://formspree.io/f/xlgzjnvv"
               method="POST"
             >
               <div class="form-group">
@@ -272,7 +277,12 @@
                 <label for="message">Message</label>
                 <textarea id="message" name="message" rows="5" placeholder="What's on your mind?" required></textarea>
               </div>
-              <button type="submit" class="btn btn--primary btn--full">Send Message</button>
+              <button type="submit" class="btn btn--primary btn--full" id="submitBtn">
+                Send Message
+              </button>
+              <p class="form__success" id="formSuccess">
+                ✓ Message sent — I'll get back to you soon.
+              </p>
             </form>
 
             <div class="contact__socials">
@@ -294,6 +304,11 @@
         </div>
         <div class="contact__particles" id="particles" aria-hidden="true"></div>
       </section>
+
+      <!-- FOOTER -->
+      <footer class="footer">
+        <p>Designed & built by <span class="accent">Amir Mahdian</span> · Auckland, NZ · 2025</p>
+      </footer>
 
     </main>
 

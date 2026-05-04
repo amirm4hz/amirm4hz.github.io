@@ -863,3 +863,102 @@ h1, h2, h3, h4 {
   50%  { transform: translateY(-20px) translateX(10px);  }
   100% { transform: translateY(-35px) translateX(-8px);  }
 }
+
+/* ─────────────────────────────────────────────
+   PAGE LOADER
+───────────────────────────────────────────── */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  transition: opacity 0.5s var(--ease-out),
+              visibility 0.5s;
+}
+
+.loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader__logo {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  animation: loader-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes loader-pulse {
+  from { opacity: 0.3; transform: scale(0.97); }
+  to   { opacity: 1;   transform: scale(1);    }
+}
+
+
+/* ─────────────────────────────────────────────
+   HAMBURGER → X ANIMATION
+───────────────────────────────────────────── */
+.nav__hamburger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.nav__hamburger.is-open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nav__hamburger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ─────────────────────────────────────────────
+   ACTIVE NAV LINK
+───────────────────────────────────────────── */
+.nav__link.is-active {
+  color: var(--text-primary);
+}
+.nav__link.is-active::after {
+  width: 100%;
+}
+
+
+/* ─────────────────────────────────────────────
+   FORM SUCCESS MESSAGE
+───────────────────────────────────────────── */
+.form__success {
+  display: none;
+  color: var(--accent-light);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 12px 16px;
+  background: var(--accent-subtle);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.form__success.is-visible {
+  display: block;
+  animation: fade-up 0.5s var(--ease-out) forwards;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+
+/* ─────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: var(--space-md);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
