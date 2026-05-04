@@ -1,86 +1,85 @@
 /* ═══════════════════════════════════════════════
    main.js
    Handles: custom cursor, nav scroll state,
-            hamburger menu, mobile nav
+            hamburger menu
 ═══════════════════════════════════════════════ */
 
-// ─── Custom Cursor ───────────────────────────
-const cursorDot     = document.getElementById('cursorDot');
-const cursorOutline = document.getElementById('cursorOutline');
 
-// We track the outline with a slight lag for a "trailing" feel
-let outlineX = 0, outlineY = 0;
+/* ─────────────────────────────────────────────
+   CUSTOM CURSOR
+───────────────────────────────────────────── */
+const cursorDot     = document.getElementById("cursorDot");
+const cursorOutline = document.getElementById("cursorOutline");
+
 let dotX = 0, dotY = 0;
-let rafId;
+let outlineX = 0, outlineY = 0;
 
-document.addEventListener('mousemove', (e) => {
+// Dot snaps to mouse instantly
+document.addEventListener("mousemove", (e) => {
   dotX = e.clientX;
   dotY = e.clientY;
-
-  // Dot follows instantly
-  cursorDot.style.left = dotX + 'px';
-  cursorDot.style.top  = dotY + 'px';
+  cursorDot.style.left = dotX + "px";
+  cursorDot.style.top  = dotY + "px";
 });
 
-// Outline trails behind using requestAnimationFrame
+// Outline trails with lerp (smooth lag effect)
+// Lerp = linear interpolation: moves a % of the remaining distance each frame
+// 0.14 = 14% — lower = more lag, higher = snappier
 function animateOutline() {
-  // Lerp (linear interpolation): smoothly move toward target
-  // Think of it as: move 14% of the remaining distance each frame
   outlineX += (dotX - outlineX) * 0.14;
   outlineY += (dotY - outlineY) * 0.14;
-
-  cursorOutline.style.left = outlineX + 'px';
-  cursorOutline.style.top  = outlineY + 'px';
-
-  rafId = requestAnimationFrame(animateOutline);
+  cursorOutline.style.left = outlineX + "px";
+  cursorOutline.style.top  = outlineY + "px";
+  requestAnimationFrame(animateOutline);
 }
 animateOutline();
 
-// Expand cursor on interactive elements
-const interactives = document.querySelectorAll('a, button, .project-card, .badge, input, textarea');
-
+// Expand cursor ring when hovering interactive elements
+const interactives = document.querySelectorAll(
+  "a, button, .project-card, .badge, input, textarea"
+);
 interactives.forEach(el => {
-  el.addEventListener('mouseenter', () => cursorOutline.classList.add('is-hovering'));
-  el.addEventListener('mouseleave', () => cursorOutline.classList.remove('is-hovering'));
+  el.addEventListener("mouseenter", () => cursorOutline.classList.add("is-hovering"));
+  el.addEventListener("mouseleave", () => cursorOutline.classList.remove("is-hovering"));
 });
 
-// Hide cursor when it leaves the window
-document.addEventListener('mouseleave', () => {
-  cursorDot.style.opacity     = '0';
-  cursorOutline.style.opacity = '0';
+// Hide cursor when mouse leaves browser window
+document.addEventListener("mouseleave", () => {
+  cursorDot.style.opacity     = "0";
+  cursorOutline.style.opacity = "0";
 });
-document.addEventListener('mouseenter', () => {
-  cursorDot.style.opacity     = '1';
-  cursorOutline.style.opacity = '1';
-});
-
-
-// ─── Nav: add background on scroll ──────────
-const nav             = document.getElementById('nav');
-const scrollContainer = document.getElementById('scrollContainer');
-
-scrollContainer.addEventListener('scroll', () => {
-  if (scrollContainer.scrollTop > 50) {
-    nav.classList.add('nav--scrolled');
-  } else {
-    nav.classList.remove('nav--scrolled');
-  }
+document.addEventListener("mouseenter", () => {
+  cursorDot.style.opacity     = "1";
+  cursorOutline.style.opacity = "1";
 });
 
 
-// ─── Hamburger menu (mobile) ─────────────────
-const hamburger = document.getElementById('hamburger');
-const navLinks  = document.querySelector('.nav__links');
+/* ─────────────────────────────────────────────
+   NAV — frosted glass on scroll
+───────────────────────────────────────────── */
+const nav             = document.getElementById("nav");
+const scrollContainer = document.getElementById("scrollContainer");
 
-hamburger.addEventListener('click', () => {
-  const isOpen = navLinks.classList.toggle('nav__links--open');
-  hamburger.setAttribute('aria-expanded', isOpen);
+scrollContainer.addEventListener("scroll", () => {
+  nav.classList.toggle("nav--scrolled", scrollContainer.scrollTop > 50);
 });
 
-// Mobile nav: close when a link is clicked
-document.querySelectorAll('.nav__link').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('nav__links--open');
-    hamburger.setAttribute('aria-expanded', false);
+
+/* ─────────────────────────────────────────────
+   HAMBURGER MENU (mobile)
+───────────────────────────────────────────── */
+const hamburger = document.getElementById("hamburger");
+const navLinks  = document.querySelector(".nav__links");
+
+hamburger.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("nav__links--open");
+  hamburger.setAttribute("aria-expanded", isOpen);
+});
+
+// Close mobile nav when any link is clicked
+document.querySelectorAll(".nav__link").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("nav__links--open");
+    hamburger.setAttribute("aria-expanded", "false");
   });
 });
