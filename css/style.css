@@ -892,6 +892,7 @@ h1, h2, h3, h4 {
     --space-xl: 3rem;
   }
 
+  /* ── Nav ── */
   .nav { padding: 0 var(--space-md); }
   .nav__links { display: none; }
   .nav__hamburger { display: flex; }
@@ -917,11 +918,33 @@ h1, h2, h3, h4 {
     padding: 0.5rem 0;
   }
 
-  .section__inner {
-    padding: calc(var(--nav-h) + 1.5rem) var(--space-md) var(--space-md);
-    overflow-y: auto;
+  /* ── Sections: allow taller than screen on mobile ── */
+  /* Fixed height clips content — switch to min-height */
+  .section {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
   }
 
+  /* Scroll container still handles snapping */
+  .scroll-container {
+    height: 100dvh;
+    overflow-y: scroll;
+    scroll-snap-type: y proximity;
+  }
+
+  .section__inner {
+    padding: calc(var(--nav-h) + 1.5rem) var(--space-md) var(--space-md);
+    overflow: visible;
+  }
+
+  /* Section titles */
+  .section__title {
+    font-size: clamp(2rem, 8vw, 3rem);
+    margin-bottom: var(--space-md);
+  }
+
+  /* ── Hero ── */
   .hero__content {
     padding: 0 var(--space-md);
     padding-bottom: 80px;
@@ -940,6 +963,7 @@ h1, h2, h3, h4 {
     opacity: 0.5;
   }
 
+  /* ── About ── */
   .about__grid {
     grid-template-columns: 1fr;
     gap: var(--space-md);
@@ -950,18 +974,69 @@ h1, h2, h3, h4 {
   .about__facts  { text-align: left; }
   .about__facts li { font-size: 0.875rem; }
 
-  .projects__grid { grid-template-columns: 1fr; gap: var(--space-md); overflow-y: auto; }
-  .skills__groups { grid-template-columns: 1fr; gap: var(--space-md); }
-  .contact__layout { grid-template-columns: 1fr; gap: var(--space-md); }
+  /* ── Projects: stack cards, allow section to grow ── */
+  .projects__grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Ensure all 3 cards are visible — no clipping */
+  #projects .section__inner {
+    padding-bottom: 2rem;
+  }
+
+  /* ── Skills: fix gap between label and badges ── */
+  .skills__groups {
+    grid-template-columns: 1fr;
+    gap: 0; /* remove the big gap between groups */
+  }
+
+  .skill-group {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.25rem;
+  }
+
+  .skill-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .skill-group__label {
+    margin-bottom: 0.75rem; /* tighter gap between label and its badges */
+  }
+
+  /* ── Contact ── */
+  .contact__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
 
   .contact__sub {
     font-size: 0.95rem;
     margin-top: -1.5rem;
   }
 
-  .section__title {
-    font-size: clamp(2rem, 8vw, 3rem);
-    margin-bottom: var(--space-md);
+  /* Fix social links pushed to the left */
+  .contact__socials {
+    padding: 0; /* remove left padding offset */
+    width: 100%;
+  }
+
+  .social-link {
+    width: 100%;
+    padding: 0.875rem 1rem; /* tighter padding so badge doesn't clip */
+    font-size: 0.875rem;
+  }
+
+  /* Prevent contact section from clipping */
+  #contact .section__inner {
+    padding-bottom: 2rem;
+  }
+
+  .contact__particles {
+    display: none; /* hide particles on mobile — performance + layout */
   }
 }
 
@@ -973,8 +1048,23 @@ h1, h2, h3, h4 {
     flex-wrap: wrap;
   }
 
-  .project-card { padding: 1.25rem; }
+  .project-card { padding: 1rem; }
+
   .badge { font-size: 0.78rem; padding: 6px 12px; }
   .btn   { padding: 12px 24px; font-size: 0.875rem; }
+
   .about__avatar { width: 160px; height: 160px; }
+
+  /* Social links full width, no overflow */
+  .social-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+    gap: 10px;
+  }
+
+  .social-link svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
 }
