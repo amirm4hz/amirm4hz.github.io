@@ -856,3 +856,10 @@ h1, h2, h3, h4 {
     gap: var(--space-md);
   }
 }
+
+/* ─── Particle float animation (contact section) ─── */
+@keyframes particle-float {
+  0%   { transform: translateY(0px)   translateX(0px);   }
+  50%  { transform: translateY(-20px) translateX(10px);  }
+  100% { transform: translateY(-35px) translateX(-8px);  }
+}
