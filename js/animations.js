@@ -1,8 +1,5 @@
 /* ═══════════════════════════════════════════════
-   animations.js
-   GSAP animations for Amir Mahdian's portfolio
-   Stage 3: Hero entrance + typewriter +
-            scroll-triggered section animations
+   animations.js — Amir Mahdian Portfolio
 ═══════════════════════════════════════════════ */
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,7 +13,6 @@ ScrollTrigger.defaults({
    HERO ENTRANCE ANIMATION
 ───────────────────────────────────────────── */
 function initHeroAnimation() {
-
   const tl = gsap.timeline({
     defaults: { ease: "power4.out", duration: 1 }
   });
@@ -56,7 +52,6 @@ function initHeroAnimation() {
    TYPEWRITER
 ───────────────────────────────────────────── */
 function initTypewriter() {
-
   const el = document.getElementById("typewriter");
 
   const phrases = [
@@ -82,7 +77,6 @@ function initTypewriter() {
     if (isDeleting) {
       charIndex--;
       el.textContent = currentPhrase.slice(0, charIndex);
-
       if (charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
@@ -90,11 +84,9 @@ function initTypewriter() {
         return;
       }
       setTimeout(tick, DELETE_SPEED);
-
     } else {
       charIndex++;
       el.textContent = currentPhrase.slice(0, charIndex);
-
       if (charIndex === currentPhrase.length) {
         isDeleting = true;
         setTimeout(tick, PAUSE_END);
@@ -109,60 +101,37 @@ function initTypewriter() {
 
 
 /* ─────────────────────────────────────────────
-   ABOUT SECTION
-   Avatar slides in from left, text from right
+   ABOUT
 ───────────────────────────────────────────── */
 function initAboutAnimation() {
-
-  // Only runs when #about enters the viewport
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: "#about",
       start: "top 70%",
-      once: true           // fires once — doesn't reverse on scroll back up
+      once: true
     }
   });
 
   tl
-    // Section title drops in first
     .from("#about .section__title", {
-      opacity: 0,
-      y: 40,
-      duration: 0.8,
-      ease: "power3.out"
+      opacity: 0, y: 40, duration: 0.8, ease: "power3.out"
     })
-    // Avatar slides in from the left
     .from(".about__avatar-wrap", {
-      opacity: 0,
-      x: -60,
-      duration: 0.9,
-      ease: "power3.out"
+      opacity: 0, x: -60, duration: 0.9, ease: "power3.out"
     }, "-=0.4")
-    // Text block slides in from the right simultaneously
     .from(".about__text", {
-      opacity: 0,
-      x: 60,
-      duration: 0.9,
-      ease: "power3.out"
-    }, "<")   // "<" means "start at the same time as the previous animation"
-
-    // Fun facts stagger in one by one
+      opacity: 0, x: 60, duration: 0.9, ease: "power3.out"
+    }, "<")
     .from(".about__facts li", {
-      opacity: 0,
-      x: 30,
-      duration: 0.5,
-      stagger: 0.12,      // 0.12s delay between each item
-      ease: "power2.out"
+      opacity: 0, x: 30, duration: 0.5, stagger: 0.12, ease: "power2.out"
     }, "-=0.4");
 }
 
 
 /* ─────────────────────────────────────────────
-   PROJECTS SECTION
-   Cards stagger in with a lift effect
+   PROJECTS
 ───────────────────────────────────────────── */
 function initProjectsAnimation() {
-
   gsap.from("#projects .section__title", {
     scrollTrigger: {
       trigger: "#projects",
@@ -175,7 +144,6 @@ function initProjectsAnimation() {
     ease: "power3.out"
   });
 
-  // Each card gets its own ScrollTrigger — immune to snap timing issues
   document.querySelectorAll(".project-card").forEach((card, i) => {
     gsap.from(card, {
       scrollTrigger: {
@@ -186,7 +154,7 @@ function initProjectsAnimation() {
       opacity: 0,
       y: 60,
       duration: 0.8,
-      delay: i * 0.15,   // manual stagger via index
+      delay: i * 0.15,
       ease: "power3.out"
     });
   });
@@ -194,11 +162,9 @@ function initProjectsAnimation() {
 
 
 /* ─────────────────────────────────────────────
-   SKILLS SECTION
-   Skill groups reveal, then badges stagger in
+   SKILLS
 ───────────────────────────────────────────── */
 function initSkillsAnimation() {
-
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: "#skills",
@@ -209,37 +175,22 @@ function initSkillsAnimation() {
 
   tl
     .from("#skills .section__title", {
-      opacity: 0,
-      y: 40,
-      duration: 0.8,
-      ease: "power3.out"
+      opacity: 0, y: 40, duration: 0.8, ease: "power3.out"
     })
-    // Group labels slide in
     .from(".skill-group__label", {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: "power2.out"
+      opacity: 0, y: 20, duration: 0.6, stagger: 0.1, ease: "power2.out"
     }, "-=0.4")
-    // All badges stagger in — creates a wave effect across the grid
     .from(".badge", {
-      opacity: 0,
-      y: 20,
-      scale: 0.85,
-      duration: 0.5,
-      stagger: 0.05,       // tight stagger = rapid-fire wave
-      ease: "back.out(1.4)" // "back" easing gives a subtle overshoot pop
+      opacity: 0, y: 20, scale: 0.85, duration: 0.5,
+      stagger: 0.05, ease: "back.out(1.4)"
     }, "-=0.3");
 }
 
 
 /* ─────────────────────────────────────────────
-   CONTACT SECTION
-   Form and socials rise up, particles spawn
+   CONTACT
 ───────────────────────────────────────────── */
 function initContactAnimation() {
-
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: "#contact",
@@ -250,73 +201,48 @@ function initContactAnimation() {
 
   tl
     .from("#contact .section__title", {
-      opacity: 0,
-      y: 40,
-      duration: 0.8,
-      ease: "power3.out"
+      opacity: 0, y: 40, duration: 0.8, ease: "power3.out"
     })
     .from(".contact__sub", {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      ease: "power2.out"
+      opacity: 0, y: 20, duration: 0.6, ease: "power2.out"
     }, "-=0.4")
-    // Form slides up from below
     .from(".contact__form", {
-      opacity: 0,
-      y: 50,
-      duration: 0.8,
-      ease: "power3.out"
+      opacity: 0, y: 50, duration: 0.8, ease: "power3.out"
     }, "-=0.3")
-    // Social links stagger in from the right
     .from(".social-link", {
-      opacity: 0,
-      x: 40,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: "power2.out"
+      opacity: 0, x: 40, duration: 0.6, stagger: 0.1, ease: "power2.out"
     }, "-=0.6")
-    // Form fields highlight in one by one
     .from(".form-group", {
-      opacity: 0,
-      y: 15,
-      duration: 0.4,
-      stagger: 0.08,
-      ease: "power2.out"
+      opacity: 0, y: 15, duration: 0.4, stagger: 0.08, ease: "power2.out"
     }, "-=0.8")
-    // Kick off particles after section is revealed
     .add(() => initParticles(), "-=0.5");
 }
 
 
 /* ─────────────────────────────────────────────
-   CSS PARTICLES
-   Pure JS — no library needed.
-   Creates floating dots in the contact background.
+   PARTICLES
 ───────────────────────────────────────────── */
 function initParticles() {
-
   const container = document.getElementById("particles");
   if (!container) return;
 
-  const COUNT = 28;  // number of particles
+  const COUNT = 28;
 
   for (let i = 0; i < COUNT; i++) {
     const dot = document.createElement("div");
     dot.classList.add("particle");
 
-    // Random position, size, and opacity
-    const size    = Math.random() * 4 + 1.5;    // 1.5px – 5.5px
-    const x       = Math.random() * 100;         // % across container
-    const y       = Math.random() * 100;         // % down container
-    const delay   = Math.random() * 6;           // stagger start times
-    const dur     = Math.random() * 8 + 6;       // 6s – 14s float cycle
+    const size  = Math.random() * 4 + 1.5;
+    const x     = Math.random() * 100;
+    const y     = Math.random() * 100;
+    const delay = Math.random() * 6;
+    const dur   = Math.random() * 8 + 6;
 
     dot.style.cssText = `
       position: absolute;
       left: ${x}%;
-      top:  ${y}%;
-      width:  ${size}px;
+      top: ${y}%;
+      width: ${size}px;
       height: ${size}px;
       border-radius: 50%;
       background: var(--accent);
@@ -331,10 +257,16 @@ function initParticles() {
 
 
 /* ─────────────────────────────────────────────
-   INIT — wire everything up on DOM ready
+   INIT
+   *** KEY FIX: wait for window.load + 950ms
+   so hero fires AFTER the loader has hidden ***
 ───────────────────────────────────────────── */
-document.addEventListener("DOMContentLoaded", () => {
-  initHeroAnimation();
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    initHeroAnimation();
+  }, 950); // matches the 900ms loader delay + small buffer
+
+  // Scroll animations don't need to wait — sections aren't visible yet anyway
   initAboutAnimation();
   initProjectsAnimation();
   initSkillsAnimation();

@@ -1,19 +1,14 @@
 /* ═══════════════════════════════════════════════
-   main.js — Stage 4
-   Custom cursor · Nav scroll state · Active nav
-   Hamburger menu · Form feedback · Page loader
+   main.js — Amir Mahdian Portfolio
 ═══════════════════════════════════════════════ */
 
 
 /* ─────────────────────────────────────────────
    PAGE LOADER
-   Hides the loader once everything is ready,
-   then lets animations.js fire the hero
 ───────────────────────────────────────────── */
 const loader = document.getElementById("loader");
 
 window.addEventListener("load", () => {
-  // Small delay so the logo pulse is seen briefly
   setTimeout(() => {
     loader.classList.add("is-hidden");
   }, 900);
@@ -77,20 +72,16 @@ scrollContainer.addEventListener("scroll", () => {
 
 /* ─────────────────────────────────────────────
    ACTIVE NAV LINK
-   Highlights the nav link matching the section
-   currently snapped into view
 ───────────────────────────────────────────── */
 const sections = document.querySelectorAll(".section");
 const navLinks = document.querySelectorAll(".nav__link");
 
 function updateActiveNav() {
-  // Find which section is most visible in the scroll container
   let currentId = "";
   const containerMid = scrollContainer.scrollTop + window.innerHeight / 2;
 
   sections.forEach(section => {
-    const offsetTop = section.offsetTop;
-    if (containerMid >= offsetTop) {
+    if (containerMid >= section.offsetTop) {
       currentId = section.id;
     }
   });
@@ -103,15 +94,14 @@ function updateActiveNav() {
   });
 }
 
-// Set initial active state on load
 updateActiveNav();
 
 
 /* ─────────────────────────────────────────────
    HAMBURGER MENU
 ───────────────────────────────────────────── */
-const hamburger  = document.getElementById("hamburger");
-const mobileNav  = document.querySelector(".nav__links");
+const hamburger = document.getElementById("hamburger");
+const mobileNav = document.querySelector(".nav__links");
 
 hamburger.addEventListener("click", () => {
   const isOpen = mobileNav.classList.toggle("nav__links--open");
@@ -119,7 +109,6 @@ hamburger.addEventListener("click", () => {
   hamburger.setAttribute("aria-expanded", isOpen);
 });
 
-// Close on link click
 document.querySelectorAll(".nav__link").forEach(link => {
   link.addEventListener("click", () => {
     mobileNav.classList.remove("nav__links--open");
@@ -130,19 +119,16 @@ document.querySelectorAll(".nav__link").forEach(link => {
 
 
 /* ─────────────────────────────────────────────
-   CONTACT FORM — submission feedback
-   Intercepts the Formspree submit, shows a
-   success message instead of redirecting
+   CONTACT FORM
 ───────────────────────────────────────────── */
-const contactForm  = document.getElementById("contactForm");
-const submitBtn    = document.getElementById("submitBtn");
-const formSuccess  = document.getElementById("formSuccess");
+const contactForm = document.getElementById("contactForm");
+const submitBtn   = document.getElementById("submitBtn");
+const formSuccess = document.getElementById("formSuccess");
 
 if (contactForm) {
   contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Show loading state on button
     submitBtn.textContent = "Sending...";
     submitBtn.disabled = true;
 
@@ -156,25 +142,18 @@ if (contactForm) {
       });
 
       if (response.ok) {
-        // Success — hide form, show message
         contactForm.reset();
         submitBtn.textContent = "Send Message";
         submitBtn.disabled    = false;
         formSuccess.classList.add("is-visible");
-
-        // Hide success message after 6 seconds
         setTimeout(() => {
           formSuccess.classList.remove("is-visible");
         }, 6000);
-
       } else {
-        // Formspree returned an error
         submitBtn.textContent = "Try again";
         submitBtn.disabled    = false;
       }
-
     } catch {
-      // Network error
       submitBtn.textContent = "Try again";
       submitBtn.disabled    = false;
     }
