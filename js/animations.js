@@ -198,7 +198,6 @@ function initSkillTabs() {
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      // Update active tab
       tabs.forEach(t => t.classList.remove('is-active'));
       tab.classList.add('is-active');
 
@@ -208,12 +207,17 @@ function initSkillTabs() {
         const match = filter === 'all' || group.dataset.category === filter;
 
         if (match) {
+          // Clear any GSAP inline styles first, then animate in cleanly
+          gsap.killTweensOf(group);
           group.style.display = '';
+          group.style.opacity = '';
+          group.style.transform = '';
           gsap.fromTo(group,
             { opacity: 0, y: 16 },
             { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
           );
         } else {
+          gsap.killTweensOf(group);
           gsap.to(group, {
             opacity: 0, y: -10, duration: 0.2, ease: 'power2.in',
             onComplete: () => { group.style.display = 'none'; }
@@ -223,7 +227,6 @@ function initSkillTabs() {
     });
   });
 }
-
 
 /* ─────────────────────────────────────────────
    SCROLL ANIMATIONS
