@@ -1466,3 +1466,92 @@ h1, h2, h3, h4 {
   pointer-events: none;
   z-index: 2;
 }
+
+/* ─────────────────────────────────────────────
+   1. HERO NAME 3D TILT
+───────────────────────────────────────────── */
+.hero__name-wrap {
+  display: inline-block;
+  transform-style: preserve-3d;
+  perspective: 600px;
+  transition: transform 0.1s ease;
+}
+
+/* ─────────────────────────────────────────────
+   3. BADGE TOOLTIPS
+───────────────────────────────────────────── */
+.badge {
+  position: relative; /* needed for tooltip positioning */
+}
+
+.badge[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  color: var(--accent-light);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.25);
+  z-index: 100;
+}
+
+/* Arrow pointing down from tooltip */
+.badge[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border: 5px solid transparent;
+  border-top-color: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+
+.badge[data-tooltip]:hover::after,
+.badge[data-tooltip]:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Hide tooltips on mobile — touch devices don't hover */
+@media (hover: none) {
+  .badge[data-tooltip]::after,
+  .badge[data-tooltip]::before {
+    display: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   4. CLICK RIPPLE
+───────────────────────────────────────────── */
+.click-ripple {
+  position: fixed;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple-out 0.7s var(--ease-out) forwards;
+}
+
+@keyframes ripple-out {
+  0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(18); opacity: 0;   }
+}

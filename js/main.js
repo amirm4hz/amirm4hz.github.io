@@ -424,3 +424,67 @@ function initCardSpotlight() {
 }
 
 initCardSpotlight();
+
+/* ─────────────────────────────────────────────
+   1. HERO NAME 3D TILT
+   Name physically tilts as cursor moves
+───────────────────────────────────────────── */
+function initHeroNameTilt() {
+  const heroSection = document.getElementById('hero');
+  const heroName    = document.querySelector('.hero__name');
+  if (!heroSection || !heroName) return;
+
+  // Wrap the name in a preserve-3d container
+  const wrap = document.createElement('div');
+  wrap.classList.add('hero__name-wrap');
+  heroName.parentNode.insertBefore(wrap, heroName);
+  wrap.appendChild(heroName);
+
+  heroSection.addEventListener('mousemove', (e) => {
+    const rect    = heroSection.getBoundingClientRect();
+    const centerX = rect.left + rect.width  / 2;
+    const centerY = rect.top  + rect.height / 2;
+
+    // Normalise to -1 → +1
+    const dx = (e.clientX - centerX) / (rect.width  / 2);
+    const dy = (e.clientY - centerY) / (rect.height / 2);
+
+    // Max tilt in degrees
+    const maxTilt = 12;
+    const rotY =  dx * maxTilt;
+    const rotX = -dy * maxTilt * 0.5; // subtler on Y axis
+
+    wrap.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+  });
+
+  heroSection.addEventListener('mouseleave', () => {
+    // Spring back to flat
+    wrap.style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+    wrap.style.transform  = 'perspective(600px) rotateX(0deg) rotateY(0deg)';
+    setTimeout(() => { wrap.style.transition = ''; }, 800);
+  });
+
+  // Don't run on touch devices — performance
+  if (window.matchMedia('(hover: none)').matches) return;
+}
+
+initHeroNameTilt();
+
+/* ─────────────────────────────────────────────
+   4. AMBIENT CLICK RIPPLE
+   Violet ring expands from cursor on click
+───────────────────────────────────────────── */
+function initClickRipple() {
+  document.addEventListener('click', (e) => {
+    const ripple = document.createElement('div');
+    ripple.classList.add('click-ripple');
+    ripple.style.left = e.clientX + 'px';
+    ripple.style.top  = e.clientY + 'px';
+    document.body.appendChild(ripple);
+
+    // Remove after animation completes
+    setTimeout(() => ripple.remove(), 700);
+  });
+}
+
+initClickRipple();
