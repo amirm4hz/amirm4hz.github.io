@@ -57,16 +57,63 @@ document.addEventListener("mouseenter", () => {
   cursorOutline.style.opacity = "1";
 });
 
+/* ─────────────────────────────────────────────
+   MAGNETIC BUTTONS
+   Buttons attract toward cursor when nearby
+───────────────────────────────────────────── */
+function initMagneticButtons() {
+  const buttons = document.querySelectorAll(".btn");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("mousemove", (e) => {
+      const rect     = btn.getBoundingClientRect();
+      const btnCX    = rect.left + rect.width  / 2;
+      const btnCY    = rect.top  + rect.height / 2;
+      const dx       = e.clientX - btnCX;
+      const dy       = e.clientY - btnCY;
+
+      // Strength — how far the button pulls (px)
+      const strength = 0.38;
+
+      btn.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
+    });
+
+    btn.addEventListener("mouseleave", () => {
+      // Spring back smoothly
+      btn.style.transition = "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+      btn.style.transform  = "translate(0px, 0px)";
+
+      // Remove inline transition after spring completes
+      setTimeout(() => { btn.style.transition = ""; }, 500);
+    });
+
+    btn.addEventListener("mouseenter", () => {
+      // Fast response on entry
+      btn.style.transition = "transform 0.15s ease";
+    });
+  });
+}
+
+// Call it
+initMagneticButtons();
 
 /* ─────────────────────────────────────────────
    NAV — frosted glass on scroll
 ───────────────────────────────────────────── */
 const nav             = document.getElementById("nav");
 const scrollContainer = document.getElementById("scrollContainer");
+const scrollProgress  = document.getElementById("scrollProgress");
 
 scrollContainer.addEventListener("scroll", () => {
+  // Nav frosted glass
   nav.classList.toggle("nav--scrolled", scrollContainer.scrollTop > 50);
   updateActiveNav();
+
+  // Scroll progress bar
+  const scrolled = scrollContainer.scrollTop;
+  const total    = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+  const pct      = total > 0 ? (scrolled / total) * 100 : 0;
+  scrollProgress.style.width = pct + "%";
 });
 
 

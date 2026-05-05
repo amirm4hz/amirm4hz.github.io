@@ -12,6 +12,21 @@
   </head>
   <body>
 
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <!-- Grain texture overlay -->
+    <svg class="grain" aria-hidden="true">
+      <filter id="grain-filter">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.65"
+          numOctaves="3"
+          stitchTiles="stitch"
+        />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#grain-filter)" />
+    </svg>
+    
     <div class="nebula-bg" aria-hidden="true">
       <div class="nebula-blob blob-1"></div>
       <div class="nebula-blob blob-2"></div>
@@ -46,10 +61,15 @@
 
       <!-- ═══ HERO ═══ -->
       <section class="section" id="hero">
+        <div class="aurora" aria-hidden="true">
+          <div class="aurora__blob aurora__blob--1"></div>
+          <div class="aurora__blob aurora__blob--2"></div>
+          <div class="aurora__blob aurora__blob--3"></div>
+        </div>
         <div class="starfield" aria-hidden="true"></div>
         <div class="hero__content">
           <p class="hero__greeting">Hey, I'm</p>
-          <h1 class="hero__name">Amir Mahdian</h1>
+          <h1 class="hero__name" data-text="Amir Mahdian">Amir Mahdian</h1>
           <div class="hero__title-wrap">
             <span class="hero__title-static">I build&nbsp;</span>
             <span class="hero__typewriter" id="typewriter"></span>
@@ -200,7 +220,7 @@
       <section class="section" id="skills">
         <div class="starfield" aria-hidden="true"></div> 
         
-        <canvas id="constellationCanvas" aria-hidden="true"></canvas>
+        <canvas id="constellationCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
 
         <div class="section__inner">
           <h2 class="section__title">Tech <span class="accent">Stack</span></h2>

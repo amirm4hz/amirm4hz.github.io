@@ -113,6 +113,52 @@ function initStarfield() {
   setTimeout(spawnShootingStar, 2500);
 }
 
+/* ─────────────────────────────────────────────
+   MOUSE PARALLAX ON HERO STARS
+   Stars shift slightly as the cursor moves —
+   gives the hero a real 3D depth illusion
+───────────────────────────────────────────── */
+function initStarParallax() {
+  const heroStarfield = document.querySelector('#hero .starfield');
+  if (!heroStarfield) return;
+
+  // Grab all stars and assign each a random depth layer (0.1 – 0.5)
+  // Deeper layers move less, front layers move more — creates parallax
+  const stars = heroStarfield.querySelectorAll('.star');
+  stars.forEach(star => {
+    star.dataset.depth = (Math.random() * 0.4 + 0.1).toFixed(2);
+  });
+
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    // Convert mouse position to -1 → +1 range centred on the screen
+    targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Smooth lerp loop — runs every frame
+  function parallaxLoop() {
+    // Lerp toward target — 0.06 = smooth lag
+    currentX += (targetX - currentX) * 0.06;
+    currentY += (targetY - currentY) * 0.06;
+
+    const strength = 28; // max pixel shift at full mouse deflection
+
+    stars.forEach(star => {
+      const depth = parseFloat(star.dataset.depth);
+      const moveX = currentX * strength * depth;
+      const moveY = currentY * strength * depth;
+      star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+
+    requestAnimationFrame(parallaxLoop);
+  }
+
+  parallaxLoop();
+}
+
 
 /* ─────────────────────────────────────────────
    SHOOTING STARS
@@ -274,6 +320,7 @@ window.addEventListener("load", () => {
 
   // Everything else
   initStarfield();
+  initStarParallax();
   initSkillTabs();
   initAboutAnimation();
   initProjectsAnimation();
