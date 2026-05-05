@@ -283,38 +283,6 @@ window.addEventListener("load", () => {
 });
 
 /* ─────────────────────────────────────────────
-   SKILLS FILTERING
-───────────────────────────────────────────── */
-const skillTabs = document.querySelectorAll('.skill-tab');
-const skillGroups = document.querySelectorAll('.skill-group');
-
-skillTabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    // 1. Remove active state from all tabs, add to the clicked one
-    skillTabs.forEach(t => t.classList.remove('is-active'));
-    tab.classList.add('is-active');
-
-    const filter = tab.getAttribute('data-filter');
-
-    // 2. Filter the groups
-    skillGroups.forEach(group => {
-      const category = group.getAttribute('data-category');
-      
-      if (filter === 'all' || filter === category) {
-        group.style.display = 'block'; // Show it
-        // Add a smooth fade-in using your existing GSAP
-        gsap.fromTo(group, 
-          { opacity: 0, y: 10 }, 
-          { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
-        );
-      } else {
-        group.style.display = 'none'; // Hide it
-      }
-    });
-  });
-});
-
-/* ─────────────────────────────────────────────
    CLEAN TEXT SCRAMBLER (ABOUT ME) - EMOJI SAFE
 ───────────────────────────────────────────── */
 const scrambleElement = document.getElementById('aboutFactText');
