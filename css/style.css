@@ -51,7 +51,7 @@
 /* ─── 2. RESET & BASE ─── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 16px; scroll-behavior: smooth; cursor: none; }
+html { font-size: 16px; scroll-behavior: smooth; cursor: none; overflow-x: hidden;}
 
 body {
   font-family: var(--font-body);
@@ -199,6 +199,7 @@ h1, h2, h3, h4 {
 .scroll-container {
   height: 100dvh;
   overflow-y: scroll;
+  overflow-x: hidden;
   /* scroll snap removed — free scrolling */
   scroll-behavior: smooth;
   scrollbar-width: none;
@@ -326,7 +327,7 @@ h1, h2, h3, h4 {
    AURORA NEBULA — hero background
 ───────────────────────────────────────────── */
 .aurora {
-  position: absolute;
+  position: fixed; /* was absolute — now covers entire viewport always */
   inset: 0;
   pointer-events: none;
   z-index: 0;
@@ -336,14 +337,14 @@ h1, h2, h3, h4 {
 .aurora__blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(70px);
-  opacity: 0.55; /* was 0.28 — much more visible now */
+  filter: blur(90px);
+  opacity: 0.38;
 }
 
 .aurora__blob--1 {
   width: 55vw;
   height: 55vw;
-  background: radial-gradient(circle, #00FF94, #00C875, transparent 70%);
+  background: radial-gradient(circle, #00C9A7, #007A63, transparent 70%);
   top: -15%;
   left: -10%;
   animation: aurora-drift 14s 0s ease-in-out infinite alternate;
@@ -352,7 +353,7 @@ h1, h2, h3, h4 {
 .aurora__blob--2 {
   width: 45vw;
   height: 45vw;
-  background: radial-gradient(circle, #00FFB2, #00A86B, transparent 70%);
+  background: radial-gradient(circle, #00B896, #006B55, transparent 70%);
   bottom: -20%;
   right: -5%;
   animation: aurora-drift 18s -6s ease-in-out infinite alternate;
@@ -361,21 +362,21 @@ h1, h2, h3, h4 {
 .aurora__blob--3 {
   width: 35vw;
   height: 35vw;
-  background: radial-gradient(circle, #7C3AED, #00E890, transparent 70%);
+  background: radial-gradient(circle, #7C3AED, #00A87A, transparent 70%);
   top: 30%;
   left: 40%;
   animation: aurora-drift 22s -11s ease-in-out infinite alternate;
 }
 
 @keyframes aurora-drift {
-  0%   { transform: translate(0px, 0px)    scale(1);    opacity: 0.50; }
-  33%  { transform: translate(30px, -20px) scale(1.06); opacity: 0.65; }
-  66%  { transform: translate(-20px, 15px) scale(0.96); opacity: 0.55; }
-  100% { transform: translate(10px, -30px) scale(1.04); opacity: 0.60; }
+  0%   { transform: translate(0px, 0px)    scale(1);    opacity: 0.32; }
+  33%  { transform: translate(30px, -20px) scale(1.06); opacity: 0.42; }
+  66%  { transform: translate(-20px, 15px) scale(0.96); opacity: 0.36; }
+  100% { transform: translate(10px, -30px) scale(1.04); opacity: 0.38; }
 }
 
 @media (max-width: 600px) {
-  .aurora__blob { opacity: 0.40; filter: blur(50px); }
+  .aurora__blob { opacity: 0.22; filter: blur(70px); }
 }
 
 .scroll-hint {
@@ -1272,6 +1273,19 @@ h1, h2, h3, h4 {
 
   /* Stars — fewer on mobile for performance */
   .starfield { opacity: 0.6; }
+
+  /* Contact socials flush on mobile */
+  .contact__socials {
+    padding: 0;
+    width: 100%;
+  }
+
+  .social-link {
+    width: 100%;
+    padding: 0.875rem 0.75rem;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1281,8 +1295,8 @@ h1, h2, h3, h4 {
   .badge { font-size: 0.78rem; padding: 6px 12px; }
   .btn   { padding: 12px 24px; font-size: 0.875rem; }
   .about__avatar { width: 160px; height: 160px; }
-  .social-link { padding: 0.75rem 1rem; font-size: 0.8rem; gap: 10px; }
-  .social-link svg { width: 18px; height: 18px; }
+  .social-link { padding: 0.875rem 0.6rem; font-size: 0.8rem; gap: 8px; }
+  .social-link svg { width: 18px; height: 18px; flex-shrink: 0; }
 }
 
 /* ─────────────────────────────────────────────
@@ -1419,4 +1433,23 @@ h1, h2, h3, h4 {
 ───────────────────────────────────────────── */
 .btn {
   will-change: transform; /* GPU hint for smooth magnetic movement */
+}
+
+/* ─────────────────────────────────────────────
+   CARD CURSOR SPOTLIGHT
+───────────────────────────────────────────── */
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(
+    300px circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    rgba(124, 58, 237, 0.12),
+    transparent 70%
+  );
+  opacity: var(--spotlight-opacity, 0);
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 2;
 }

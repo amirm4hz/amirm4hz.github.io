@@ -398,3 +398,29 @@ if (slides.length > 1) {
     slides[currentSlide].classList.add('is-active');
   }, 6000); // Changes the banner image every 6 seconds
 }
+
+/* ─────────────────────────────────────────────
+   CARD CURSOR SPOTLIGHT
+   A glow follows your cursor inside project cards
+───────────────────────────────────────────── */
+function initCardSpotlight() {
+  const cards = document.querySelectorAll('.project-card');
+
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      card.style.setProperty('--spotlight-x', `${x}px`);
+      card.style.setProperty('--spotlight-y', `${y}px`);
+      card.style.setProperty('--spotlight-opacity', '1');
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--spotlight-opacity', '0');
+    });
+  });
+}
+
+initCardSpotlight();
