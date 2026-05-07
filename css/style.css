@@ -230,8 +230,7 @@ h1, h2, h3, h4 {
 /* ─── 7. HERO ─── */
 .hero__content {
   max-width: 800px;
-  padding: 0 var(--space-lg);
-  padding-bottom: 100px;
+  padding: 3rem var(--space-lg) 100px;
   z-index: 2;
   position: relative;
 }
@@ -763,6 +762,34 @@ h1, h2, h3, h4 {
 .project-card:hover .project-card__banner-icon {
   opacity: 1;
   transform: scale(1.1);
+}
+
+/* ─── PROJECT COLOR THEMES ─── */
+.project-card--security:hover {
+  border-color: #E74C3C;
+  box-shadow: 0 0 40px rgba(231, 76, 60, 0.35);
+}
+
+.project-card--security::after {
+  background: radial-gradient(circle at var(--spotlight-x) var(--spotlight-y), rgba(231, 76, 60, 0.15), transparent 80%);
+}
+
+.project-card--web:hover {
+  border-color: #00BCD4;
+  box-shadow: 0 0 40px rgba(0, 188, 212, 0.35);
+}
+
+.project-card--web::after {
+  background: radial-gradient(circle at var(--spotlight-x) var(--spotlight-y), rgba(0, 188, 212, 0.15), transparent 80%);
+}
+
+.project-card--privacy:hover {
+  border-color: #FF9800;
+  box-shadow: 0 0 40px rgba(255, 152, 0, 0.35);
+}
+
+.project-card--privacy::after {
+  background: radial-gradient(circle at var(--spotlight-x) var(--spotlight-y), rgba(255, 152, 0, 0.15), transparent 80%);
 }
 
 /* ─── 10. SKILLS — throwable logo bubbles ─── */
