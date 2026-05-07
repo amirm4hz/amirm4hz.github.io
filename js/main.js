@@ -8,6 +8,15 @@
 ───────────────────────────────────────────── */
 const loader = document.getElementById("loader");
 
+const cleanupTasks = [];
+function cleanupAll() {
+  cleanupTasks.forEach(fn => fn());
+  cleanupTasks.length = 0;
+}
+
+window.addEventListener("beforeunload", cleanupAll);
+window.addEventListener("pagehide", cleanupAll);
+
 window.addEventListener("load", () => {
   setTimeout(() => {
     loader.classList.add("is-hidden");
@@ -31,14 +40,18 @@ document.addEventListener("mousemove", (e) => {
   cursorDot.style.top  = dotY + "px";
 });
 
+let outlineRafId = null;
 function animateOutline() {
   outlineX += (dotX - outlineX) * 0.14;
   outlineY += (dotY - outlineY) * 0.14;
   cursorOutline.style.left = outlineX + "px";
   cursorOutline.style.top  = outlineY + "px";
-  requestAnimationFrame(animateOutline);
+  outlineRafId = requestAnimationFrame(animateOutline);
 }
 animateOutline();
+cleanupTasks.push(() => {
+  if (outlineRafId !== null) cancelAnimationFrame(outlineRafId);
+});
 
 const interactives = document.querySelectorAll(
   "a, button, .project-card, .badge, input, textarea"
@@ -56,43 +69,6 @@ document.addEventListener("mouseenter", () => {
   cursorDot.style.opacity     = "1";
   cursorOutline.style.opacity = "1";
 });
-
-/* ─────────────────────────────────────────────
-   MAGNETIC BUTTONS
-   Buttons attract toward cursor when nearby
-───────────────────────────────────────────── */
-function initMagneticButtons() {
-  const buttons = document.querySelectorAll(".btn");
-
-  buttons.forEach(btn => {
-    btn.addEventListener("mousemove", (e) => {
-      const rect     = btn.getBoundingClientRect();
-      const btnCX    = rect.left + rect.width  / 2;
-      const btnCY    = rect.top  + rect.height / 2;
-      const dx       = e.clientX - btnCX;
-      const dy       = e.clientY - btnCY;
-
-      // Strength — how far the button pulls (px)
-      const strength = 0.38;
-
-      btn.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
-    });
-
-    btn.addEventListener("mouseleave", () => {
-      // Spring back smoothly
-      btn.style.transition = "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
-      btn.style.transform  = "translate(0px, 0px)";
-
-      // Remove inline transition after spring completes
-      setTimeout(() => { btn.style.transition = ""; }, 500);
-    });
-
-    btn.addEventListener("mouseenter", () => {
-      // Fast response on entry
-      btn.style.transition = "transform 0.15s ease";
-    });
-  });
-}
 
 /* ─────────────────────────────────────────────
    NAV — frosted glass on scroll + Intersection Observer
@@ -164,11 +140,40 @@ document.querySelectorAll(".nav__link").forEach(link => {
 const contactForm = document.getElementById("contactForm");
 const submitBtn   = document.getElementById("submitBtn");
 const formSuccess = document.getElementById("formSuccess");
+const formError   = document.getElementById("formError");
+
+function setFormMessage(message, isError = false) {
+  if (formError) {
+    formError.textContent = message;
+    formError.style.display = message ? "block" : "none";
+    formError.classList.toggle("form__error--visible", Boolean(message));
+  }
+}
 
 if (contactForm) {
   contactForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const name = contactForm.name.value.trim();
+    const email = contactForm.email.value.trim();
+    const message = contactForm.message.value.trim();
+
+    if (!name) {
+      setFormMessage("Please enter your name.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFormMessage("Please enter a valid email address.");
+      return;
+    }
+
+    if (message.length < 10) {
+      setFormMessage("Please write a longer message (at least 10 characters).");
+      return;
+    }
+
+    setFormMessage("");
     submitBtn.textContent = "Sending...";
     submitBtn.disabled = true;
 
@@ -190,12 +195,15 @@ if (contactForm) {
           formSuccess.classList.remove("is-visible");
         }, 6000);
       } else {
+        setFormMessage("Something went wrong. Please try again.");
         submitBtn.textContent = "Try again";
         submitBtn.disabled    = false;
       }
-    } catch {
+    } catch (error) {
+      setFormMessage("Network error. Please check your connection and try again.");
       submitBtn.textContent = "Try again";
       submitBtn.disabled    = false;
+      console.error(error);
     }
   });
 }
@@ -216,6 +224,8 @@ if (scrambleElement) {
   ];
   
   let wordIndex = 0;
+  let scrambleTicker = null;
+  let scrambleCycle = null;
 
   function scrambleWord(newWord) {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ01"; 
@@ -224,7 +234,11 @@ if (scrambleElement) {
     // Array.from() prevents emojis from being sliced in half and breaking
     const wordArray = Array.from(newWord); 
     
-    const interval = setInterval(() => {
+    if (scrambleTicker) {
+      clearInterval(scrambleTicker);
+    }
+
+    scrambleTicker = setInterval(() => {
       scrambleElement.innerText = wordArray
         .map((letter, index) => {
           if (index < iterations) return wordArray[index]; 
@@ -237,7 +251,8 @@ if (scrambleElement) {
         .join("");
       
       if (iterations >= wordArray.length) {
-        clearInterval(interval);
+        clearInterval(scrambleTicker);
+        scrambleTicker = null;
       }
       
       iterations += 1; // Speed of the reveal
@@ -245,10 +260,14 @@ if (scrambleElement) {
   }
 
   // Waits 8 FULL SECONDS before scrambling to the next fact
-  setInterval(() => {
+  scrambleCycle = setInterval(() => {
     wordIndex = (wordIndex + 1) % words.length;
     scrambleWord(words[wordIndex]);
-  }, 5000); 
+  }, 5000);
+  cleanupTasks.push(() => {
+    if (scrambleCycle) clearInterval(scrambleCycle);
+    if (scrambleTicker) clearInterval(scrambleTicker);
+  });
 }
 
 /* ─────────────────────────────────────────────
@@ -259,7 +278,7 @@ const slides = document.querySelectorAll('.about__slide');
 if (slides.length > 1) {
   let currentSlide = 0;
 
-  setInterval(() => {
+  const slideshowInterval = setInterval(() => {
     // Remove active class from current image
     slides[currentSlide].classList.remove('is-active');
     
@@ -269,6 +288,8 @@ if (slides.length > 1) {
     // Add active class to new image to trigger the fade and zoom
     slides[currentSlide].classList.add('is-active');
   }, 6000); // Changes the banner image every 6 seconds
+
+  cleanupTasks.push(() => clearInterval(slideshowInterval));
 }
 
 /* ─────────────────────────────────────────────
@@ -277,9 +298,10 @@ if (slides.length > 1) {
 ───────────────────────────────────────────── */
 function initCardSpotlight() {
   const cards = document.querySelectorAll('.project-card');
+  const spotlightListeners = [];
 
   cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
+    const handleMouseMove = (e) => {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -287,12 +309,20 @@ function initCardSpotlight() {
       card.style.setProperty('--spotlight-x', `${x}px`);
       card.style.setProperty('--spotlight-y', `${y}px`);
       card.style.setProperty('--spotlight-opacity', '1');
-    });
+    };
 
-    card.addEventListener('mouseleave', () => {
+    const handleMouseLeave = () => {
       card.style.setProperty('--spotlight-opacity', '0');
-    });
+    };
+
+    card.addEventListener('mousemove', handleMouseMove);
+    card.addEventListener('mouseleave', handleMouseLeave);
+
+    spotlightListeners.push(() => card.removeEventListener('mousemove', handleMouseMove));
+    spotlightListeners.push(() => card.removeEventListener('mouseleave', handleMouseLeave));
   });
+
+  cleanupTasks.push(() => spotlightListeners.forEach(fn => fn()));
 }
 
 initCardSpotlight();

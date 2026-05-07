@@ -4,6 +4,14 @@
 
 gsap.registerPlugin(ScrollTrigger);
 
+const animationCleanupTasks = [];
+function cleanupAnimations() {
+  animationCleanupTasks.forEach(fn => fn());
+  animationCleanupTasks.length = 0;
+}
+window.addEventListener('beforeunload', cleanupAnimations);
+window.addEventListener('pagehide', cleanupAnimations);
+
 ScrollTrigger.defaults({ scroller: "#scrollContainer" });
 
 
@@ -30,6 +38,7 @@ function initHeroAnimation() {
 /* ─────────────────────────────────────────────
    HERO TYPEWRITER
 ───────────────────────────────────────────── */
+let typewriterTimer = null;
 function initTypewriter() {
   const el = document.getElementById("typewriter");
   if (!el) return;
@@ -52,22 +61,26 @@ function initTypewriter() {
       if (charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
-        setTimeout(tick, 300);
+        typewriterTimer = setTimeout(tick, 300);
         return;
       }
-      setTimeout(tick, 40);
+      typewriterTimer = setTimeout(tick, 40);
     } else {
       charIndex++;
       el.textContent = current.slice(0, charIndex);
       if (charIndex === current.length) {
         isDeleting = true;
-        setTimeout(tick, 1800);
+        typewriterTimer = setTimeout(tick, 1800);
         return;
       }
-      setTimeout(tick, 80);
+      typewriterTimer = setTimeout(tick, 80);
     }
   }
   tick();
+
+  animationCleanupTasks.push(() => {
+    if (typewriterTimer) clearTimeout(typewriterTimer);
+  });
 }
 
 /* ─────────────────────────────────────────────
@@ -110,7 +123,8 @@ function initStarfield() {
   });
 
   // Start shooting stars after a short delay
-  setTimeout(spawnShootingStar, 2500);
+  const startTimeout = setTimeout(spawnShootingStar, 2500);
+  animationCleanupTasks.push(() => clearTimeout(startTimeout));
 }
 
 /* ─────────────────────────────────────────────
@@ -138,6 +152,7 @@ function initStarParallax() {
     targetY = (e.clientY / window.innerHeight - 0.5) * 2;
   });
 
+  let parallaxRafId = null;
   // Smooth lerp loop — runs every frame
   function parallaxLoop() {
     // Lerp toward target — 0.06 = smooth lag
@@ -153,8 +168,12 @@ function initStarParallax() {
       star.style.transform = `translate(${moveX}px, ${moveY}px)`;
     });
 
-    requestAnimationFrame(parallaxLoop);
+    parallaxRafId = requestAnimationFrame(parallaxLoop);
   }
+
+  animationCleanupTasks.push(() => {
+    if (parallaxRafId !== null) cancelAnimationFrame(parallaxRafId);
+  });
 
   parallaxLoop();
 }
@@ -166,6 +185,8 @@ function initStarParallax() {
 ───────────────────────────────────────────── */
 let shootingStarCount = 0;
 const MAX_SHOOTING_STARS = 30;
+
+const shootingStarTimers = [];
 
 function spawnShootingStar() {
   // Stop spawning if we hit the cap
@@ -189,16 +210,23 @@ function spawnShootingStar() {
   shootingStarCount++;
 
   // Remove after animation completes and decrement counter
-  setTimeout(() => {
+  const removalTimeout = setTimeout(() => {
     star.remove();
     shootingStarCount--;
     // Spawn a new one after removal to maintain count
     if (shootingStarCount < MAX_SHOOTING_STARS) {
       const nextIn = Math.random() * 600 + 200;
-      setTimeout(spawnShootingStar, nextIn);
+      const scheduleTimeout = setTimeout(spawnShootingStar, nextIn);
+      shootingStarTimers.push(scheduleTimeout);
     }
   }, 6000);
+  shootingStarTimers.push(removalTimeout);
 }
+
+animationCleanupTasks.push(() => {
+  shootingStarTimers.forEach(clearTimeout);
+  shootingStarTimers.length = 0;
+});
 
 
 /* ─────────────────────────────────────────────

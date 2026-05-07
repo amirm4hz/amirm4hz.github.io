@@ -548,10 +548,10 @@ h1, h2, h3, h4 {
   margin-top: 1.5rem;
   
   /* FORCE VISIBILITY & FRONT PLACEMENT */
-  z-index: 50 !important; 
-  opacity: 1 !important;  
-  visibility: visible !important;
-  color: var(--text-primary); 
+  z-index: 50;
+  opacity: 1;
+  visibility: visible;
+  color: var(--text-primary);
   
   /* Dark Glass + Tactical Blueprint Grid */
   background-color: rgba(12, 12, 20, 0.6); 
@@ -740,11 +740,13 @@ h1, h2, h3, h4 {
   width: calc(100% + calc(var(--space-md) * 2));
   margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm);
   padding: 1rem var(--space-md);
+  background: linear-gradient(135deg, rgba(53, 114, 165, 0.12), rgba(53, 114, 165, 0.04));
   background: linear-gradient(
     135deg,
     color-mix(in srgb, var(--card-color) 12%, transparent),
     color-mix(in srgb, var(--card-color) 4%, transparent)
   );
+  border-bottom: 1px solid rgba(53, 114, 165, 0.18);
   border-bottom: 1px solid color-mix(in srgb, var(--card-color) 25%, transparent);
   display: flex;
   align-items: center;
@@ -952,6 +954,23 @@ h1, h2, h3, h4 {
   border: 0;
 }
 
+.form__error {
+  display: none;
+  color: #f8fafc;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.form__error--visible {
+  display: block;
+  animation: fade-up 0.4s var(--ease-out) forwards;
+}
+
 .form__success {
   display: none;
   color: var(--accent-light);
@@ -1148,6 +1167,10 @@ h1, h2, h3, h4 {
 
 
 /* ─── 16. RESPONSIVE ─── */
+@media (max-width: 1200px) {
+  .projects__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 900px) {
   :root { --space-lg: 2rem; --space-xl: 3rem; }
 
@@ -1446,11 +1469,8 @@ h1, h2, h3, h4 {
   71%  { opacity: 0; }
 }
 
-/* ─────────────────────────────────────────────
-   MAGNETIC BUTTONS — visual feedback
-───────────────────────────────────────────── */
 .btn {
-  will-change: transform; /* GPU hint for smooth magnetic movement */
+  will-change: transform; /* GPU hint for smooth hover/interaction */
 }
 
 /* ─────────────────────────────────────────────
@@ -1537,26 +1557,4 @@ h1, h2, h3, h4 {
   .badge[data-tooltip]::before {
     display: none;
   }
-}
-
-
-/* ─────────────────────────────────────────────
-   4. CLICK RIPPLE
-───────────────────────────────────────────── */
-.click-ripple {
-  position: fixed;
-  border-radius: 50%;
-  width: 8px;
-  height: 8px;
-  background: transparent;
-  border: 1.5px solid var(--accent);
-  pointer-events: none;
-  z-index: 9997;
-  transform: translate(-50%, -50%) scale(0);
-  animation: ripple-out 0.7s var(--ease-out) forwards;
-}
-
-@keyframes ripple-out {
-  0%   { transform: translate(-50%, -50%) scale(0);  opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(18); opacity: 0;   }
 }
