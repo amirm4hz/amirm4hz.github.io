@@ -335,6 +335,7 @@ function initHeroNameTilt() {
   const heroSection = document.getElementById('hero');
   const heroName    = document.querySelector('.hero__name');
   if (!heroSection || !heroName) return;
+  if (window.matchMedia('(hover: none)').matches) return;
 
   // Wrap the name in a preserve-3d container
   const wrap = document.createElement('div');
@@ -342,7 +343,7 @@ function initHeroNameTilt() {
   heroName.parentNode.insertBefore(wrap, heroName);
   wrap.appendChild(heroName);
 
-  heroSection.addEventListener('mousemove', (e) => {
+  const handleMouseMove = (e) => {
     const rect    = heroSection.getBoundingClientRect();
     const centerX = rect.left + rect.width  / 2;
     const centerY = rect.top  + rect.height / 2;
@@ -357,17 +358,21 @@ function initHeroNameTilt() {
     const rotX = -dy * maxTilt * 0.5; // subtler on Y axis
 
     wrap.style.transform = `perspective(600px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-  });
+  };
 
-  heroSection.addEventListener('mouseleave', () => {
-    // Spring back to flat
+  const handleMouseLeave = () => {
     wrap.style.transition = 'transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
     wrap.style.transform  = 'perspective(600px) rotateX(0deg) rotateY(0deg)';
     setTimeout(() => { wrap.style.transition = ''; }, 800);
-  });
+  };
 
-  // Don't run on touch devices — performance
-  if (window.matchMedia('(hover: none)').matches) return;
+  heroSection.addEventListener('mousemove', handleMouseMove);
+  heroSection.addEventListener('mouseleave', handleMouseLeave);
+
+  cleanupTasks.push(() => {
+    heroSection.removeEventListener('mousemove', handleMouseMove);
+    heroSection.removeEventListener('mouseleave', handleMouseLeave);
+  });
 }
 
 initHeroNameTilt();
@@ -390,6 +395,7 @@ function initClickSparks() {
 
   const ctx  = sparkCanvas.getContext('2d');
   let sparks = [];
+  let sparkRafId = null;
 
   function resize() {
     sparkCanvas.width  = window.innerWidth;
@@ -398,7 +404,7 @@ function initClickSparks() {
   resize();
   window.addEventListener('resize', resize);
 
-  document.addEventListener('click', (e) => {
+  const handleClick = (e) => {
     const count = 10;
     for (let i = 0; i < count; i++) {
       const angle  = (i / count) * Math.PI * 2 + Math.random() * 0.3;
@@ -416,7 +422,8 @@ function initClickSparks() {
         color: Math.random() > 0.4 ? '#7C3AED' : '#ffffff',
       });
     }
-  });
+  };
+  document.addEventListener('click', handleClick);
 
   function drawSparks() {
     ctx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
@@ -447,10 +454,17 @@ function initClickSparks() {
       s.life -= s.decay;
     });
 
-    requestAnimationFrame(drawSparks);
+    sparkRafId = requestAnimationFrame(drawSparks);
   }
 
   drawSparks();
+
+  cleanupTasks.push(() => {
+    if (sparkRafId !== null) cancelAnimationFrame(sparkRafId);
+    window.removeEventListener('resize', resize);
+    document.removeEventListener('click', handleClick);
+    sparkCanvas.remove();
+  });
 }
 
 initClickSparks();
@@ -511,6 +525,7 @@ function initSkillBubbles() {
     let prevMouse  = { x: -9999, y: -9999 };
     let mouseVel   = { x: 0, y: 0 };
     let frameCount = 0;
+    let bubbleRafId = null;
 
     function resize() {
       width  = canvas.width  = section.offsetWidth;
@@ -542,20 +557,20 @@ function initSkillBubbles() {
         : { x: e.clientX - r.left,             y: e.clientY - r.top };
     };
 
-    section.addEventListener('mousedown', e => {
+    const handleMouseDown = (e) => {
       const p = pos(e);
       for (const b of bubbles) {
         const d = Math.hypot(p.x - b.x, p.y - b.y);
         if (d < b.radius) { dragging = b; b.vx = 0; b.vy = 0; break; }
       }
-    });
+    };
 
-    section.addEventListener('mousemove', e => {
+    const handleMouseMove = (e) => {
       prevMouse = { ...mouse };
       mouse     = pos(e);
       mouseVel  = { x: mouse.x - prevMouse.x, y: mouse.y - prevMouse.y };
       if (dragging) { dragging.x = mouse.x; dragging.y = mouse.y; }
-    });
+    };
 
     const release = () => {
       if (dragging) {
@@ -567,10 +582,7 @@ function initSkillBubbles() {
       mouse = { x: -9999, y: -9999 };
     };
 
-    section.addEventListener('mouseup',    release);
-    section.addEventListener('mouseleave', release);
-
-    section.addEventListener('touchstart', e => {
+    const handleTouchStart = (e) => {
       const p = pos(e);
       for (const b of bubbles) {
         if (Math.hypot(p.x - b.x, p.y - b.y) < b.radius) {
@@ -578,9 +590,9 @@ function initSkillBubbles() {
           dragging = b; b.vx = 0; b.vy = 0; break;
         }
       }
-    }, { passive: false });
+    };
 
-    section.addEventListener('touchmove', e => {
+    const handleTouchMove = (e) => {
       if (dragging) {
         e.preventDefault(); // only block scroll if actively dragging
         prevMouse = { ...mouse };
@@ -590,9 +602,15 @@ function initSkillBubbles() {
         dragging.y = mouse.y;
       }
       // if not dragging — do nothing, let browser scroll naturally
-    }, { passive: false });
+    };
 
-    section.addEventListener('touchend', release);
+    section.addEventListener('mousedown', handleMouseDown);
+    section.addEventListener('mousemove', handleMouseMove);
+    section.addEventListener('mouseup',    release);
+    section.addEventListener('mouseleave', release);
+    section.addEventListener('touchstart', handleTouchStart, { passive: false });
+    section.addEventListener('touchmove',  handleTouchMove,  { passive: false });
+    section.addEventListener('touchend',   release);
 
     window.addEventListener('resize', resize);
     resize();
@@ -734,10 +752,22 @@ function initSkillBubbles() {
         ctx.fillText('✦ grab', mouse.x, mouse.y - 24);
       }
 
-      requestAnimationFrame(draw);
+      bubbleRafId = requestAnimationFrame(draw);
     }
 
     draw();
+
+    cleanupTasks.push(() => {
+      if (bubbleRafId !== null) cancelAnimationFrame(bubbleRafId);
+      window.removeEventListener('resize', resize);
+      section.removeEventListener('mousedown', handleMouseDown);
+      section.removeEventListener('mousemove', handleMouseMove);
+      section.removeEventListener('mouseup', release);
+      section.removeEventListener('mouseleave', release);
+      section.removeEventListener('touchstart', handleTouchStart, { passive: false });
+      section.removeEventListener('touchmove', handleTouchMove, { passive: false });
+      section.removeEventListener('touchend', release);
+    });
   });
 }
 

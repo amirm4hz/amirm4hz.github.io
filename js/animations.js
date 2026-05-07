@@ -124,7 +124,13 @@ function initStarfield() {
 
   // Start shooting stars after a short delay
   const startTimeout = setTimeout(spawnShootingStar, 2500);
-  animationCleanupTasks.push(() => clearTimeout(startTimeout));
+  animationCleanupTasks.push(() => {
+    clearTimeout(startTimeout);
+    shootingStarTimers.forEach(clearTimeout);
+    shootingStarTimers.length = 0;
+    shootingStarCount = 0;
+    document.querySelectorAll('.shooting-star').forEach(star => star.remove());
+  });
 }
 
 /* ─────────────────────────────────────────────
@@ -146,11 +152,13 @@ function initStarParallax() {
   let targetX = 0, targetY = 0;
   let currentX = 0, currentY = 0;
 
-  document.addEventListener('mousemove', (e) => {
+  const handleMouseMove = (e) => {
     // Convert mouse position to -1 → +1 range centred on the screen
     targetX = (e.clientX / window.innerWidth  - 0.5) * 2;
     targetY = (e.clientY / window.innerHeight - 0.5) * 2;
-  });
+  };
+
+  document.addEventListener('mousemove', handleMouseMove);
 
   let parallaxRafId = null;
   // Smooth lerp loop — runs every frame
@@ -173,6 +181,7 @@ function initStarParallax() {
 
   animationCleanupTasks.push(() => {
     if (parallaxRafId !== null) cancelAnimationFrame(parallaxRafId);
+    document.removeEventListener('mousemove', handleMouseMove);
   });
 
   parallaxLoop();
