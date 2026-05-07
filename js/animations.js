@@ -162,8 +162,17 @@ function initStarParallax() {
 
 /* ─────────────────────────────────────────────
    SHOOTING STARS
+   Capped at 30 active stars to prevent memory leaks
 ───────────────────────────────────────────── */
+let shootingStarCount = 0;
+const MAX_SHOOTING_STARS = 30;
+
 function spawnShootingStar() {
+  // Stop spawning if we hit the cap
+  if (shootingStarCount >= MAX_SHOOTING_STARS) {
+    return;
+  }
+
   const starfields = document.querySelectorAll('#hero .starfield, #projects .starfield, #skills .starfield, #contact .starfield');
   if (!starfields.length) return;
 
@@ -177,14 +186,18 @@ function spawnShootingStar() {
   star.style.top  = (Math.random() * 50 - 20) + '%';
 
   starfield.appendChild(star);
+  shootingStarCount++;
 
-  // Deletes the hidden HTML element after 3 seconds so your browser doesn't crash. 
-  // Don't worry, the script keeps generating new ones forever!
-  setTimeout(() => star.remove(), 6000);
-
-  // Make them spawn MUCH faster (Between 0.2 and 0.8 seconds apart)
-  const nextIn = Math.random() * 600 + 200; 
-  setTimeout(spawnShootingStar, nextIn);
+  // Remove after animation completes and decrement counter
+  setTimeout(() => {
+    star.remove();
+    shootingStarCount--;
+    // Spawn a new one after removal to maintain count
+    if (shootingStarCount < MAX_SHOOTING_STARS) {
+      const nextIn = Math.random() * 600 + 200;
+      setTimeout(spawnShootingStar, nextIn);
+    }
+  }, 6000);
 }
 
 

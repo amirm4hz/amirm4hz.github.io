@@ -94,20 +94,19 @@ function initMagneticButtons() {
   });
 }
 
-// Call it
-initMagneticButtons();
-
 /* ─────────────────────────────────────────────
-   NAV — frosted glass on scroll
+   NAV — frosted glass on scroll + Intersection Observer
 ───────────────────────────────────────────── */
 const nav             = document.getElementById("nav");
 const scrollContainer = document.getElementById("scrollContainer");
 const scrollProgress  = document.getElementById("scrollProgress");
+const sections        = document.querySelectorAll(".section");
+const navLinks        = document.querySelectorAll(".nav__link");
 
+// Scroll progress bar + nav background
 scrollContainer.addEventListener("scroll", () => {
   // Nav frosted glass
   nav.classList.toggle("nav--scrolled", scrollContainer.scrollTop > 50);
-  updateActiveNav();
 
   // Scroll progress bar
   const scrolled = scrollContainer.scrollTop;
@@ -116,32 +115,26 @@ scrollContainer.addEventListener("scroll", () => {
   scrollProgress.style.width = pct + "%";
 });
 
-
 /* ─────────────────────────────────────────────
-   ACTIVE NAV LINK
+   ACTIVE NAV LINK — Intersection Observer
+   Efficiently detects which section is in view
 ───────────────────────────────────────────── */
-const sections = document.querySelectorAll(".section");
-const navLinks = document.querySelectorAll(".nav__link");
+const observerOptions = {
+  root: scrollContainer,
+  threshold: 0.3
+};
 
-function updateActiveNav() {
-  let currentId = "";
-  const containerMid = scrollContainer.scrollTop + window.innerHeight / 2;
-
-  sections.forEach(section => {
-    if (containerMid >= section.offsetTop) {
-      currentId = section.id;
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(link => link.classList.remove("is-active"));
+      const activeLink = document.querySelector(`.nav__link[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add("is-active");
     }
   });
+}, observerOptions);
 
-  navLinks.forEach(link => {
-    link.classList.remove("is-active");
-    if (link.getAttribute("href") === `#${currentId}`) {
-      link.classList.add("is-active");
-    }
-  });
-}
-
-updateActiveNav();
+sections.forEach(section => observer.observe(section));
 
 
 /* ─────────────────────────────────────────────
@@ -620,9 +613,15 @@ function initSkillBubbles() {
               if (a === dragging) {
                 bb.x -= nx * overlap * 2; // Push other bubble away more
                 bb.y -= ny * overlap * 2;
+                // Give the hit bubble a kick so it glides away smoothly
+                bb.vx -= nx * 8;
+                bb.vy -= ny * 8;
               } else if (bb === dragging) {
                 a.x += nx * overlap * 2;  // Push other bubble away more
                 a.y += ny * overlap * 2;
+                // Give the hit bubble a kick so it glides away smoothly
+                a.vx += nx * 8;
+                a.vy += ny * 8;
               } else {
                 // Both free — normal billiard-style separation
                 a.x  += nx * overlap;
@@ -631,7 +630,7 @@ function initSkillBubbles() {
                 bb.y -= ny * overlap;
               }
 
-              // Elastic velocity exchange along collision normal
+              // Elastic velocity exchange along collision normal (for free-flying bubbles)
               const dvx = a.vx - bb.vx;
               const dvy = a.vy - bb.vy;
               const dot = dvx * nx + dvy * ny;
