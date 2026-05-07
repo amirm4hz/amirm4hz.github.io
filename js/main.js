@@ -350,23 +350,87 @@ function initHeroNameTilt() {
 initHeroNameTilt();
 
 /* ─────────────────────────────────────────────
-   4. AMBIENT CLICK RIPPLE
-   Violet ring expands from cursor on click
+   CURSOR CLICK — SPARK BURST
+   8 sparks shoot outward like an electrical discharge
 ───────────────────────────────────────────── */
-function initClickRipple() {
-  document.addEventListener('click', (e) => {
-    const ripple = document.createElement('div');
-    ripple.classList.add('click-ripple');
-    ripple.style.left = e.clientX + 'px';
-    ripple.style.top  = e.clientY + 'px';
-    document.body.appendChild(ripple);
+function initClickSparks() {
+  const sparkCanvas = document.createElement('canvas');
+  sparkCanvas.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9996;
+  `;
+  document.body.appendChild(sparkCanvas);
 
-    // Remove after animation completes
-    setTimeout(() => ripple.remove(), 700);
+  const ctx  = sparkCanvas.getContext('2d');
+  let sparks = [];
+
+  function resize() {
+    sparkCanvas.width  = window.innerWidth;
+    sparkCanvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  document.addEventListener('click', (e) => {
+    const count = 10;
+    for (let i = 0; i < count; i++) {
+      const angle  = (i / count) * Math.PI * 2 + Math.random() * 0.3;
+      const speed  = Math.random() * 5 + 3;
+      const length = Math.random() * 14 + 8;
+      sparks.push({
+        x:     e.clientX,
+        y:     e.clientY,
+        vx:    Math.cos(angle) * speed,
+        vy:    Math.sin(angle) * speed,
+        life:  1,
+        decay: Math.random() * 0.055 + 0.04,
+        length,
+        // Randomly violet or white
+        color: Math.random() > 0.4 ? '#7C3AED' : '#ffffff',
+      });
+    }
   });
+
+  function drawSparks() {
+    ctx.clearRect(0, 0, sparkCanvas.width, sparkCanvas.height);
+
+    sparks = sparks.filter(s => s.life > 0);
+
+    sparks.forEach(s => {
+      const tail = { x: s.x - s.vx * (s.length / 6), y: s.y - s.vy * (s.length / 6) };
+
+      ctx.save();
+      ctx.globalAlpha = s.life * s.life; // quadratic fade — sharp then soft
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth   = s.life * 1.8;
+      ctx.lineCap     = 'round';
+      ctx.shadowBlur  = 6;
+      ctx.shadowColor = s.color;
+
+      ctx.beginPath();
+      ctx.moveTo(tail.x, tail.y);
+      ctx.lineTo(s.x, s.y);
+      ctx.stroke();
+      ctx.restore();
+
+      s.x    += s.vx;
+      s.y    += s.vy;
+      s.vx   *= 0.88; // decelerate
+      s.vy   *= 0.88;
+      s.life -= s.decay;
+    });
+
+    requestAnimationFrame(drawSparks);
+  }
+
+  drawSparks();
 }
 
-initClickRipple();
+initClickSparks();
 
 
 /* ─────────────────────────────────────────────
@@ -483,23 +547,26 @@ function initSkillBubbles() {
     section.addEventListener('mouseup',    release);
     section.addEventListener('mouseleave', release);
 
-    // Touch support
     section.addEventListener('touchstart', e => {
-      e.preventDefault();
       const p = pos(e);
       for (const b of bubbles) {
         if (Math.hypot(p.x - b.x, p.y - b.y) < b.radius) {
+          e.preventDefault(); // only block scroll if grabbing a bubble
           dragging = b; b.vx = 0; b.vy = 0; break;
         }
       }
     }, { passive: false });
 
     section.addEventListener('touchmove', e => {
-      e.preventDefault();
-      prevMouse = { ...mouse };
-      mouse     = pos(e);
-      mouseVel  = { x: mouse.x - prevMouse.x, y: mouse.y - prevMouse.y };
-      if (dragging) { dragging.x = mouse.x; dragging.y = mouse.y; }
+      if (dragging) {
+        e.preventDefault(); // only block scroll if actively dragging
+        prevMouse = { ...mouse };
+        mouse     = pos(e);
+        mouseVel  = { x: mouse.x - prevMouse.x, y: mouse.y - prevMouse.y };
+        dragging.x = mouse.x;
+        dragging.y = mouse.y;
+      }
+      // if not dragging — do nothing, let browser scroll naturally
     }, { passive: false });
 
     section.addEventListener('touchend', release);
@@ -532,20 +599,49 @@ function initSkillBubbles() {
         b.vy *= 0.992;
       });
 
-      // Bubble–bubble separation — only every 2nd frame for perf
+      // Elastic collision — no overlap, proper billiard-ball bounce
       if (frameCount % 2 === 0) {
         for (let i = 0; i < bubbles.length; i++) {
           for (let j = i + 1; j < bubbles.length; j++) {
-            const a = bubbles[i], bb = bubbles[j];
+            const a  = bubbles[i];
+            const bb = bubbles[j];
             const dx   = a.x - bb.x;
             const dy   = a.y - bb.y;
             const dist = Math.hypot(dx, dy);
-            const minD = a.radius + bb.radius + 5;
+            const minD = a.radius + bb.radius + 2;
+
             if (dist < minD && dist > 0) {
-              const push = ((minD - dist) / minD) * 0.35;
-              const nx = dx / dist, ny = dy / dist;
-              if (a  !== dragging) { a.vx  += nx * push; a.vy  += ny * push; }
-              if (bb !== dragging) { bb.vx -= nx * push; bb.vy -= ny * push; }
+              // Push apart so they never overlap
+              const overlap = (minD - dist) / 2;
+              const nx = dx / dist;
+              const ny = dy / dist;
+
+              // If one is dragging, only push the non-dragged bubble
+              if (a === dragging) {
+                bb.x -= nx * overlap * 2; // Push other bubble away more
+                bb.y -= ny * overlap * 2;
+              } else if (bb === dragging) {
+                a.x += nx * overlap * 2;  // Push other bubble away more
+                a.y += ny * overlap * 2;
+              } else {
+                // Both free — normal billiard-style separation
+                a.x  += nx * overlap;
+                a.y  += ny * overlap;
+                bb.x -= nx * overlap;
+                bb.y -= ny * overlap;
+              }
+
+              // Elastic velocity exchange along collision normal
+              const dvx = a.vx - bb.vx;
+              const dvy = a.vy - bb.vy;
+              const dot = dvx * nx + dvy * ny;
+
+              // Only resolve if moving toward each other
+              if (dot < 0) {
+                const impulse = dot * 0.85; // 0.85 = slight energy loss on impact
+                if (a !== dragging) { a.vx  -= impulse * nx; a.vy  -= impulse * ny; }
+                if (bb !== dragging) { bb.vx += impulse * nx; bb.vy += impulse * ny; }
+              }
             }
           }
         }

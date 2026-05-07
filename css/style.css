@@ -735,6 +735,34 @@ h1, h2, h3, h4 {
   border: 1px solid rgba(124, 58, 237, 0.2);
 }
 
+/* Project card banner with tech logos */
+.project-card__banner {
+  width: calc(100% + calc(var(--space-md) * 2));
+  margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-sm);
+  padding: 1rem var(--space-md);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--card-color) 12%, transparent),
+    color-mix(in srgb, var(--card-color) 4%, transparent)
+  );
+  border-bottom: 1px solid color-mix(in srgb, var(--card-color) 25%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.project-card__banner-icon {
+  font-size: 1.6rem;
+  opacity: 0.85;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.project-card:hover .project-card__banner-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
 /* ─── 10. SKILLS — throwable logo bubbles ─── */
 #skills {
   position: relative;
