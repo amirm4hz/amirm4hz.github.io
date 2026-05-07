@@ -189,46 +189,6 @@ function spawnShootingStar() {
 
 
 /* ─────────────────────────────────────────────
-   SKILLS TAB FILTERING
-───────────────────────────────────────────── */
-function initSkillTabs() {
-  const tabs   = document.querySelectorAll('.skill-tab');
-  const groups = document.querySelectorAll('.skill-group');
-  if (!tabs.length) return;
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('is-active'));
-      tab.classList.add('is-active');
-
-      const filter = tab.dataset.filter;
-
-      groups.forEach(group => {
-        const match = filter === 'all' || group.dataset.category === filter;
-
-        if (match) {
-          // Clear any GSAP inline styles first, then animate in cleanly
-          gsap.killTweensOf(group);
-          group.style.display = '';
-          group.style.opacity = '';
-          group.style.transform = '';
-          gsap.fromTo(group,
-            { opacity: 0, y: 16 },
-            { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
-          );
-        } else {
-          gsap.killTweensOf(group);
-          gsap.to(group, {
-            opacity: 0, y: -10, duration: 0.2, ease: 'power2.in',
-            onComplete: () => { group.style.display = 'none'; }
-          });
-        }
-      });
-    });
-  });
-}
-
-/* ─────────────────────────────────────────────
    SCROLL ANIMATIONS
 ───────────────────────────────────────────── */
 function initAboutAnimation() {
@@ -257,14 +217,13 @@ function initProjectsAnimation() {
 }
 
 function initSkillsAnimation() {
-  const tl = gsap.timeline({
-    scrollTrigger: { trigger: "#skills", start: "top 70%", once: true }
+  gsap.from(".skills__header", {
+    scrollTrigger: { trigger: "#skills", start: "top 70%", once: true },
+    opacity: 0,
+    y: 40,
+    duration: 0.8,
+    ease: "power3.out"
   });
-  tl
-    .from("#skills .section__title", { opacity: 0, y: 40, duration: 0.8, ease: "power3.out" })
-    .from(".skills__tabs",           { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, "-=0.4")
-    .from(".skill-group__label",     { opacity: 0, y: 20, duration: 0.6, stagger: 0.1, ease: "power2.out" }, "-=0.3")
-    .from(".badge",                  { opacity: 0, y: 20, scale: 0.85, duration: 0.5, stagger: 0.05, ease: "back.out(1.4)" }, "-=0.3");
 }
 
 function initContactAnimation() {
@@ -324,7 +283,6 @@ window.addEventListener("load", () => {
   // Everything else
   initStarfield();
   initStarParallax();
-  initSkillTabs();
   initAboutAnimation();
   initProjectsAnimation();
   initSkillsAnimation();

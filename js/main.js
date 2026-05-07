@@ -207,127 +207,6 @@ if (contactForm) {
   });
 }
 
-/* ─────────────────────────────────────────────
-   SKILLS CONSTELLATION WEB
-───────────────────────────────────────────── */
-function initConstellation() {
-  const canvas = document.getElementById("constellationCanvas");
-  const skillsSection = document.getElementById("skills");
-  if (!canvas || !skillsSection) return;
-
-  const ctx = canvas.getContext("2d");
-  let width, height;
-  let particles = [];
-  
-  // Track mouse coordinates relative to the skills section
-  let mouse = { x: -1000, y: -1000 };
-
-  // Adjust canvas size to match the section exactly
-  function resize() {
-    width = skillsSection.offsetWidth;
-    height = skillsSection.offsetHeight;
-    canvas.width = width;
-    canvas.height = height;
-    initParticles();
-  }
-
-  // Create the background nodes (stars)
-  function initParticles() {
-    particles = [];
-    // Adjust the number of nodes based on screen size so it isn't too cluttered on mobile
-    const numParticles = Math.floor((width * height) / 15000); 
-    
-    for (let i = 0; i < numParticles; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5, // Slow drift speed
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 1.5 + 0.5
-      });
-    }
-  }
-
-  window.addEventListener("resize", resize);
-  resize();
-
-  // Track the mouse only when it's over the skills section
-  skillsSection.addEventListener("mousemove", (e) => {
-    const rect = skillsSection.getBoundingClientRect();
-    mouse.x = e.clientX - rect.left;
-    mouse.y = e.clientY - rect.top;
-  });
-
-  skillsSection.addEventListener("mouseleave", () => {
-    mouse.x = -1000;
-    mouse.y = -1000;
-  });
-
-  // The Animation Loop
-  function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    for (let i = 0; i < particles.length; i++) {
-      let p = particles[i];
-
-      // Move particles
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Bounce off edges smoothly
-      if (p.x < 0 || p.x > width) p.vx *= -1;
-      if (p.y < 0 || p.y > height) p.vy *= -1;
-
-      // Draw the node (star)
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(124, 58, 237, 0.5)"; // Deep purple
-      ctx.fill();
-
-      // Check distance to mouse
-      let dxMouse = mouse.x - p.x;
-      let dyMouse = mouse.y - p.y;
-      let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-
-      // If mouse is near, draw a bright line connecting to it
-      if (distMouse < 200) {
-        ctx.beginPath();
-        // The closer the mouse, the more opaque the line
-        ctx.strokeStyle = `rgba(157, 95, 245, ${1 - distMouse / 200})`; 
-        ctx.lineWidth = 1.5;
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(mouse.x, mouse.y);
-        ctx.stroke();
-      }
-
-      // Check distance to other nodes to create the "web"
-      for (let j = i + 1; j < particles.length; j++) {
-        let p2 = particles[j];
-        let dx = p.x - p2.x;
-        let dy = p.y - p2.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-
-        // Connect nearby nodes with faint, subtle lines
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(124, 58, 237, ${0.2 - dist / 600})`; 
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(animate);
-  }
-  
-  animate();
-}
-
-// Start the effect shortly after the page loads
-window.addEventListener("load", () => {
-  setTimeout(initConstellation, 300);
-});
 
 /* ─────────────────────────────────────────────
    CLEAN TEXT SCRAMBLER (ABOUT ME) - EMOJI SAFE
@@ -488,3 +367,255 @@ function initClickRipple() {
 }
 
 initClickRipple();
+
+
+/* ─────────────────────────────────────────────
+   THROWABLE SKILL LOGO BUBBLES
+   Logos load from Devicon CDN.
+   Grab any bubble and throw it — physics handles the rest.
+───────────────────────────────────────────── */
+function initSkillBubbles() {
+  const section = document.getElementById('skills');
+  const canvas  = document.getElementById('skillBubbleCanvas');
+  if (!canvas || !section) return;
+
+  const ctx = canvas.getContext('2d');
+
+  const skillData = [
+    // Languages
+    { label: 'Python',      color: '#3572A5', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg' },
+    { label: 'JavaScript',  color: '#F7DF1E', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg' },
+    { label: 'Java',        color: '#E76F00', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg' },
+    { label: 'C',           color: '#A8B9CC', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg' },
+    { label: 'HTML',        color: '#E34F26', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg' },
+    { label: 'CSS',         color: '#1572B6', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg' },
+    // Full-Stack
+    { label: 'React',       color: '#61DAFB', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg' },
+    { label: 'Node.js',     color: '#68A063', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg' },
+    { label: 'PostgreSQL',  color: '#336791', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg' },
+    // AI / ML
+    { label: 'PyTorch',     color: '#EE4C2C', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg' },
+    { label: 'scikit',      color: '#F89939', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg' },
+    // Tools
+    { label: 'Git',         color: '#F05032', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg' },
+    { label: 'Docker',      color: '#2496ED', url: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg' },
+    // Embedded — no logo, styled text
+    { label: 'VHDL',        color: '#7C3AED', url: null },
+  ];
+
+  const RADIUS = 44;
+
+  // Load all logos in parallel
+  const loadImg = (url) => new Promise(resolve => {
+    if (!url) { resolve(null); return; }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload  = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+
+  Promise.all(skillData.map(s => loadImg(s.url))).then(images => {
+
+    let bubbles = [];
+    let width, height;
+    let dragging   = null;
+    let mouse      = { x: -9999, y: -9999 };
+    let prevMouse  = { x: -9999, y: -9999 };
+    let mouseVel   = { x: 0, y: 0 };
+    let frameCount = 0;
+
+    function resize() {
+      width  = canvas.width  = section.offsetWidth;
+      height = canvas.height = section.offsetHeight;
+      place();
+    }
+
+    function place() {
+      const cols  = Math.ceil(Math.sqrt(skillData.length));
+      const cellW = width / cols;
+      const cellH = (height - 150) / Math.ceil(skillData.length / cols);
+
+      bubbles = skillData.map((s, i) => ({
+        ...s,
+        img:    images[i],
+        radius: RADIUS,
+        x:  cellW * (i % cols) + cellW / 2 + (Math.random() - 0.5) * 30,
+        y:  160 + cellH * Math.floor(i / cols) + cellH / 2 + (Math.random() - 0.5) * 20,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: (Math.random() - 0.5) * 0.8,
+      }));
+    }
+
+    // ─── Input ───
+    const pos = (e) => {
+      const r = section.getBoundingClientRect();
+      return e.touches
+        ? { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top }
+        : { x: e.clientX - r.left,             y: e.clientY - r.top };
+    };
+
+    section.addEventListener('mousedown', e => {
+      const p = pos(e);
+      for (const b of bubbles) {
+        const d = Math.hypot(p.x - b.x, p.y - b.y);
+        if (d < b.radius) { dragging = b; b.vx = 0; b.vy = 0; break; }
+      }
+    });
+
+    section.addEventListener('mousemove', e => {
+      prevMouse = { ...mouse };
+      mouse     = pos(e);
+      mouseVel  = { x: mouse.x - prevMouse.x, y: mouse.y - prevMouse.y };
+      if (dragging) { dragging.x = mouse.x; dragging.y = mouse.y; }
+    });
+
+    const release = () => {
+      if (dragging) {
+        // Throw with mouse velocity — clamped so it doesn't go insane
+        dragging.vx = Math.max(-12, Math.min(12, mouseVel.x * 1.1));
+        dragging.vy = Math.max(-12, Math.min(12, mouseVel.y * 1.1));
+        dragging = null;
+      }
+      mouse = { x: -9999, y: -9999 };
+    };
+
+    section.addEventListener('mouseup',    release);
+    section.addEventListener('mouseleave', release);
+
+    // Touch support
+    section.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const p = pos(e);
+      for (const b of bubbles) {
+        if (Math.hypot(p.x - b.x, p.y - b.y) < b.radius) {
+          dragging = b; b.vx = 0; b.vy = 0; break;
+        }
+      }
+    }, { passive: false });
+
+    section.addEventListener('touchmove', e => {
+      e.preventDefault();
+      prevMouse = { ...mouse };
+      mouse     = pos(e);
+      mouseVel  = { x: mouse.x - prevMouse.x, y: mouse.y - prevMouse.y };
+      if (dragging) { dragging.x = mouse.x; dragging.y = mouse.y; }
+    }, { passive: false });
+
+    section.addEventListener('touchend', release);
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // ─── Draw loop ───
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      frameCount++;
+
+      // Physics — skip dragged bubble
+      bubbles.forEach(b => {
+        if (b === dragging) return;
+
+        b.x += b.vx;
+        b.y += b.vy;
+
+        // Wall bounce
+        if (b.x - b.radius < 0)            { b.x = b.radius;               b.vx =  Math.abs(b.vx) * 0.75; }
+        if (b.x + b.radius > width)         { b.x = width  - b.radius;      b.vx = -Math.abs(b.vx) * 0.75; }
+        if (b.y - b.radius < 140)           { b.y = 140 + b.radius;         b.vy =  Math.abs(b.vy) * 0.75; }
+        if (b.y + b.radius > height - 10)   { b.y = height - 10 - b.radius; b.vy = -Math.abs(b.vy) * 0.75; }
+
+        // Speed cap + friction
+        const spd = Math.hypot(b.vx, b.vy);
+        if (spd > 10) { b.vx *= 10 / spd; b.vy *= 10 / spd; }
+        b.vx *= 0.992;
+        b.vy *= 0.992;
+      });
+
+      // Bubble–bubble separation — only every 2nd frame for perf
+      if (frameCount % 2 === 0) {
+        for (let i = 0; i < bubbles.length; i++) {
+          for (let j = i + 1; j < bubbles.length; j++) {
+            const a = bubbles[i], bb = bubbles[j];
+            const dx   = a.x - bb.x;
+            const dy   = a.y - bb.y;
+            const dist = Math.hypot(dx, dy);
+            const minD = a.radius + bb.radius + 5;
+            if (dist < minD && dist > 0) {
+              const push = ((minD - dist) / minD) * 0.35;
+              const nx = dx / dist, ny = dy / dist;
+              if (a  !== dragging) { a.vx  += nx * push; a.vy  += ny * push; }
+              if (bb !== dragging) { bb.vx -= nx * push; bb.vy -= ny * push; }
+            }
+          }
+        }
+      }
+
+      // ─── Render each bubble ───
+      bubbles.forEach(b => {
+        const grabbed  = b === dragging;
+        const hovering = !dragging && Math.hypot(mouse.x - b.x, mouse.y - b.y) < b.radius;
+
+        ctx.save();
+        ctx.shadowBlur  = grabbed ? 35 : hovering ? 22 : 10;
+        ctx.shadowColor = b.color;
+
+        // Circle fill
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fillStyle = grabbed ? b.color + '55' : hovering ? b.color + '33' : b.color + '1A';
+        ctx.fill();
+
+        // Circle border
+        ctx.strokeStyle = grabbed ? b.color : hovering ? b.color + 'DD' : b.color + '77';
+        ctx.lineWidth   = grabbed ? 2.5 : hovering ? 2 : 1.2;
+        ctx.stroke();
+        ctx.restore();
+
+        // Logo image (clipped to inner circle)
+        const imgR = b.radius * 0.52;
+        const imgY = b.y - b.radius * 0.18; // slightly above centre to leave room for label
+
+        if (b.img) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(b.x, imgY, imgR, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(b.img, b.x - imgR, imgY - imgR, imgR * 2, imgR * 2);
+          ctx.restore();
+        } else {
+          // VHDL — no logo, draw stylised text
+          ctx.font         = '700 11px Inter, sans-serif';
+          ctx.fillStyle    = b.color;
+          ctx.textAlign    = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(b.label, b.x, imgY);
+        }
+
+        // Label below logo
+        ctx.font         = `${grabbed || hovering ? '700' : '500'} 9.5px Inter, sans-serif`;
+        ctx.fillStyle    = grabbed || hovering ? '#FFFFFF' : '#B0A8CC';
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(b.label, b.x, b.y + b.radius * 0.52);
+      });
+
+      // Cursor hint — show grab icon text when hoverable
+      const nearAny = bubbles.some(b => Math.hypot(mouse.x - b.x, mouse.y - b.y) < b.radius);
+      if (nearAny && !dragging && mouse.x > 0) {
+        ctx.font      = '13px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.textAlign = 'center';
+        ctx.fillText('✦ grab', mouse.x, mouse.y - 24);
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  });
+}
+
+window.addEventListener('load', () => {
+  setTimeout(initSkillBubbles, 500);
+});

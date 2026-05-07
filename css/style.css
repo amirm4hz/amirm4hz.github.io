@@ -735,95 +735,43 @@ h1, h2, h3, h4 {
   border: 1px solid rgba(124, 58, 237, 0.2);
 }
 
-
-/* ─── 10. SKILLS ─── */
-
-/* Filter tabs */
-.skills__tabs {
+/* ─── 10. SKILLS — throwable logo bubbles ─── */
+#skills {
+  position: relative;
+  overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: var(--space-md);
+  align-items: flex-start;
+  justify-content: center;
 }
 
-.skill-tab {
-  padding: 8px 20px;
-  border-radius: 100px;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 600;
+#skillBubbleCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: none;
+}
+
+.skills__header {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding-top: calc(var(--nav-h) + 2rem);
+  pointer-events: none;
+  width: 100%;
+}
+
+.skills__hint {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  letter-spacing: 0.06em;
 }
 
-.skill-tab:hover {
-  color: var(--text-primary);
-  border-color: var(--accent);
-}
-
-.skill-tab.is-active {
-  color: #fff;
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-/* ─────────────────────────────────────────────
-   SKILLS GLASS CARDS
-───────────────────────────────────────────── */
-.skill-group {
-  /* The Glass Effect */
-  background: rgba(255, 255, 255, 0.02); /* Extremely faint white */
-  backdrop-filter: blur(10px);           /* Frosted glass blur */
-  -webkit-backdrop-filter: blur(10px);   /* Safari support */
-  
-  /* Borders and Spacing */
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  
-  /* Smooth hover animation */
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Make it pop when the user hovers over the card */
-.skill-group:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent-glow);
-  box-shadow: 0 8px 30px rgba(124, 58, 237, 0.1); /* Subtle purple glow */
-}
-
-.skill-group__label {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-/* Style the individual skill tags */
-.skill-group__badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.badge {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
-  border-radius: 50px; /* Pill shape */
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  transition: color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Tag lights up purple on hover */
-.badge:hover {
-  color: #fff;
-  border-color: var(--accent);
-  background: var(--accent-subtle);
+@media (max-width: 900px) {
+  .skills__header { padding-top: calc(var(--nav-h) + 1rem); }
+  .skills__hint { font-size: 0.7rem; }
 }
 
 
