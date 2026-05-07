@@ -248,8 +248,7 @@ function initAboutAnimation() {
   tl
     .from("#about .section__title",  { opacity: 0, y: 40, duration: 0.8, ease: "power3.out" })
     .from(".about__avatar-wrap",     { opacity: 0, x: -60, duration: 0.9, ease: "power3.out" }, "-=0.4")
-    .from(".about__text",            { opacity: 0, x: 60,  duration: 0.9, ease: "power3.out" }, "<")
-    .from(".about__fact-wrap",       { opacity: 0, y: 20,  duration: 0.5, ease: "power2.out" }, "-=0.3");
+    .from(".about__text",            { opacity: 0, x: 60,  duration: 0.9, ease: "power3.out" }, "<");
 }
 
 function initProjectsAnimation() {

@@ -259,6 +259,9 @@ if (scrambleElement) {
     }, 30); 
   }
 
+  // Show first word immediately on load
+  scrambleWord(words[0]);
+
   // Waits 8 FULL SECONDS before scrambling to the next fact
   scrambleCycle = setInterval(() => {
     wordIndex = (wordIndex + 1) % words.length;
