@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 · Lost in Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #08080F;
+      color: #F0EEFF;
+      font-family: 'Inter', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .code {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(6rem, 20vw, 12rem);
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, #F0EEFF 0%, #9D5FF5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.04em;
+    }
+
+    .title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 700;
+      color: #9D5FF5;
+      margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .message {
+      font-size: 1rem;
+      color: #A89EC4;
+      margin-top: 1.25rem;
+      line-height: 1.7;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2.5rem;
+      padding: 14px 32px;
+      background: #7C3AED;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(124, 58, 237, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .home-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.5);
+    }
+
+    .coords {
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #5B5378;
+      letter-spacing: 0.12em;
+      font-family: 'Syne', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<div class="content">
+  <div class="code">404</div>
+  <div class="title">Lost in Space</div>
+  <p class="message">
+    This page drifted into a black hole.<br />
+    Let's get you back to solid ground.
+  </p>
+  <a href="/" class="home-btn">
+    ← Back to Earth
+  </a>
+  <div class="coords" id="coords">LOCATING SIGNAL...</div>
+</div>
+
+<script>
+  // ─── Starfield ───
+  const canvas = document.getElementById('space');
+  const ctx    = canvas.getContext('2d');
+  let W, H, stars = [], shooters = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    stars = Array.from({ length: 180 }, () => ({
+      x:    Math.random() * W,
+      y:    Math.random() * H,
+      r:    Math.random() * 1.8 + 0.3,
+      o:    Math.random() * 0.7 + 0.1,
+      dur:  Math.random() * 3000 + 2000,
+      off:  Math.random() * 3000,
+    }));
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawnShooter() {
+    shooters.push({
+      x:    Math.random() * W * 0.7,
+      y:    Math.random() * H * 0.4,
+      vx:   Math.random() * 4 + 3,
+      vy:   Math.random() * 3 + 2,
+      life: 1,
+      tail: Math.random() * 140 + 80,
+    });
+    setTimeout(spawnShooter, Math.random() * 4000 + 3000);
+  }
+  setTimeout(spawnShooter, 1500);
+
+  let last = 0;
+  function draw(ts) {
+    ctx.clearRect(0, 0, W, H);
+
+    // Aurora blobs
+    const blobs = [
+      { x: W * 0.1, y: H * 0.2, r: W * 0.35, c: '124,58,237' },
+      { x: W * 0.8, y: H * 0.7, r: W * 0.28, c: '0,201,167' },
+    ];
+    blobs.forEach(b => {
+      const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+      g.addColorStop(0,   `rgba(${b.c},0.12)`);
+      g.addColorStop(1,   `rgba(${b.c},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Stars
+    stars.forEach(s => {
+      const t = (ts - s.off) / s.dur;
+      const o = s.o * (0.4 + 0.6 * Math.abs(Math.sin(t * Math.PI)));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${o})`;
+      ctx.fill();
+    });
+
+    // Shooting stars
+    const dt = (ts - last) / 1000;
+    last = ts;
+    for (let i = shooters.length - 1; i >= 0; i--) {
+      const s = shooters[i];
+      const g = ctx.createLinearGradient(
+        s.x - s.vx * s.tail / 6, s.y - s.vy * s.tail / 6,
+        s.x, s.y
+      );
+      g.addColorStop(0, `rgba(157,95,245,0)`);
+      g.addColorStop(1, `rgba(255,255,255,${s.life})`);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(s.x - s.vx * s.tail / 6, s.y - s.vy * s.tail / 6);
+      ctx.lineTo(s.x, s.y);
+      ctx.strokeStyle = g;
+      ctx.lineWidth   = 1.5;
+      ctx.lineCap     = 'round';
+      ctx.shadowBlur  = 8;
+      ctx.shadowColor = 'rgba(157,95,245,0.8)';
+      ctx.stroke();
+      ctx.restore();
+
+      s.x    += s.vx * dt * 60;
+      s.y    += s.vy * dt * 60;
+      s.life -= dt * 0.9;
+      if (s.life <= 0) shooters.splice(i, 1);
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // ─── Coordinates gag ───
+  const el = document.getElementById('coords');
+  const msgs = [
+    'SCANNING SECTOR 404...',
+    'SIGNAL LOST',
+    'COORDINATES: UNKNOWN',
+    'REBOOTING NAV SYSTEM...',
+    `LAST KNOWN: amirm4hz.github.io`,
+  ];
+  let mi = 0;
+  setInterval(() => {
+    mi = (mi + 1) % msgs.length;
+    el.textContent = msgs[mi];
+  }, 2200);
+</script>
+
+</body>
+</html>

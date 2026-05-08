@@ -380,7 +380,7 @@ h1, h2, h3, h4 {
 
 .scroll-hint {
   position: absolute;
-  bottom: var(--space-md);
+  bottom: calc(var(--space-md) + 0.5rem);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -392,6 +392,16 @@ h1, h2, h3, h4 {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   z-index: 2;
+}
+
+@media (min-width: 900px) {
+  .scroll-hint {
+    left: auto;
+    right: var(--space-lg);
+    transform: none;
+    bottom: calc(var(--space-lg) + 0.5rem);
+    align-items: flex-end;
+  }
 }
 
 .scroll-hint__line {
@@ -1247,6 +1257,7 @@ h1, h2, h3, h4 {
   .hero__cta     { flex-direction: column; gap: 0.75rem; }
   .hero__cta .btn { width: 100%; text-align: center; }
   .hero__orb     { width: 300px; height: 300px; right: -20%; opacity: 0.5; }
+  .scroll-hint   { display: none; }
 
   /* About */
   .about__grid           { grid-template-columns: 1fr; gap: var(--space-md); text-align: center; }
