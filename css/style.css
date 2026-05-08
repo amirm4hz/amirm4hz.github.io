@@ -447,6 +447,10 @@ h1, h2, h3, h4 {
   100% { transform: scale(1.15); } /* Zooms in 15% over 10 seconds */
 }
 
+.about__slide:not(.is-active) {
+  content-visibility: auto;
+}
+
 .about__overlay {
   position: absolute;
   top: 0; left: 0;
@@ -754,9 +758,11 @@ h1, h2, h3, h4 {
 }
 
 .project-card__banner-icon {
-  font-size: 1.6rem;
+  width: 28px;
+  height: 28px;
   opacity: 0.85;
   transition: opacity 0.2s, transform 0.2s;
+  object-fit: contain;
 }
 
 .project-card:hover .project-card__banner-icon {

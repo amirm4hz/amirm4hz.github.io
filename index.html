@@ -7,7 +7,8 @@
     <title>Amir Mahdian · Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap&font-display=swap" rel="stylesheet" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%2308080F'/><text y='72' x='46' text-anchor='middle' font-size='48' font-family='sans-serif' font-weight='900' fill='%23F0EEFF'>AM</text><text y='72' x='82' text-anchor='middle' font-size='60' font-family='sans-serif' font-weight='900' fill='%237C3AED'>.</text></svg>" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -97,11 +98,11 @@
 
         <!-- Background photo slideshow -->
         <div class="about__slideshow" aria-hidden="true" id="aboutSlideshow">
-          <div class="about__slide is-active" style="background-image: url('assets/images/slideshow/slide1.jpg')"></div>
-          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide2.jpg')"></div>
-          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide3.JPG')"></div>
-          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide4.jpg')"></div>
-          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide5.jpg')"></div>
+          <div class="about__slide is-active" style="background-image: url('assets/images/slideshow/slide1.webp')"></div>
+          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide2.webp')"></div>
+          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide3.webp')"></div>
+          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide4.webp')"></div>
+          <div class="about__slide" style="background-image: url('assets/images/slideshow/slide5.webp')"></div>
         </div>
         <div class="about__overlay" aria-hidden="true"></div>
 
@@ -154,8 +155,10 @@
             <!-- Project 1 -->
             <div class="project-card project-card--security" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="0.15">
               <div class="project-card__banner" style="--card-color:#E74C3C">
-                <i class="devicon-python-plain project-card__banner-icon"></i>
-                <i class="devicon-scikitlearn-plain project-card__banner-icon"></i>
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" 
+                     class="project-card__banner-icon" alt="Python" width="28" height="28" loading="lazy">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg" 
+                     class="project-card__banner-icon" alt="scikit-learn" width="28" height="28" loading="lazy">
               </div>
               <div class="project-card__top">
                 <span class="project-card__num">01</span>
@@ -178,9 +181,12 @@
             <!-- Project 2 -->
             <div class="project-card project-card--web" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="0.15">
               <div class="project-card__banner" style="--card-color:#00BCD4">
-                <i class="devicon-react-original project-card__banner-icon"></i>
-                <i class="devicon-nodejs-plain project-card__banner-icon"></i>
-                <i class="devicon-postgresql-plain project-card__banner-icon"></i>
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" 
+                     class="project-card__banner-icon" alt="React" width="28" height="28" loading="lazy">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" 
+                     class="project-card__banner-icon" alt="Node.js" width="28" height="28" loading="lazy">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" 
+                     class="project-card__banner-icon" alt="PostgreSQL" width="28" height="28" loading="lazy">
               </div>
               <div class="project-card__top">
                 <span class="project-card__num">02</span>
@@ -206,8 +212,10 @@
             <!-- Project 3 -->
             <div class="project-card project-card--privacy" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="0.15">
               <div class="project-card__banner" style="--card-color:#FF9800">
-                <i class="devicon-python-plain project-card__banner-icon"></i>
-                <i class="devicon-bash-plain project-card__banner-icon"></i>
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" 
+                     class="project-card__banner-icon" alt="Python" width="28" height="28" loading="lazy">
+                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg" 
+                     class="project-card__banner-icon" alt="Bash" width="28" height="28" loading="lazy">
               </div>
               <div class="project-card__top">
                 <span class="project-card__num">03</span>
@@ -294,11 +302,11 @@
 
     </main>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/main.js"></script>
+    <!-- CDN SCRIPTS — deferred so they don't block initial paint -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    <script defer src="js/animations.js"></script>
+    <script defer src="js/main.js"></script>
   </body>
 </html>
