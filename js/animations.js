@@ -324,13 +324,12 @@ function initParticles() {
 /* ─────────────────────────────────────────────
    INIT
 ───────────────────────────────────────────── */
-window.addEventListener("load", () => {
-  // Hero fires after loader fades (900ms)
-  setTimeout(() => {
-    initHeroAnimation();
-  }, 950);
+document.addEventListener("DOMContentLoaded", () => {
+  // Start the hero animation quickly once the DOM is ready.
+  initHeroAnimation();
+});
 
-  // Everything else
+window.addEventListener("load", () => {
   initStarfield();
   initStarParallax();
   initAboutAnimation();
