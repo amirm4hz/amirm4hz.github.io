@@ -643,6 +643,54 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
+/* ─── About section link buttons ─── */
+.about__links {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.about__link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.about__link-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+  transform: translateY(-2px);
+}
+
+.about__link-btn--accent {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.about__link-btn--accent:hover {
+  background: var(--accent-light);
+  border-color: var(--accent-light);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .about__links { justify-content: center; }
+}
+
 @keyframes badge-scan {
   0% { left: -100%; }
   15% { left: 200%; } 
@@ -924,6 +972,19 @@ h1, h2, h3, h4 {
 
 .social-link:hover {
   color: var(--accent-light);
+  border-color: var(--accent);
+  transform: translateX(6px);
+}
+
+.social-link--resume {
+  border-color: var(--accent);
+  background: rgba(124, 58, 237, 0.08);
+  color: var(--text-primary);
+}
+
+.social-link--resume:hover {
+  color: #fff;
+  background: var(--accent);
   border-color: var(--accent);
   transform: translateX(6px);
 }
@@ -1264,6 +1325,21 @@ h1, h2, h3, h4 {
   .about__avatar         { width: 200px; height: 200px; margin: 0 auto; }
   .about__fact-wrap      { text-align: left; }
   .about__fact-text      { white-space: normal; }
+  .about__links {
+    flex-direction: column;
+    align-items: center;
+  }
+  .about__link-btn {
+    width: min(100%, 320px);
+    justify-content: center;
+  }
+  .contact__socials {
+    align-items: stretch;
+  }
+  .contact__socials .social-link {
+    width: 100%;
+    justify-content: center;
+  }
 
   /* Projects */
   .projects__grid { grid-template-columns: 1fr; gap: 1rem; }
