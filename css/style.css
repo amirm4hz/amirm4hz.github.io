@@ -292,6 +292,14 @@ h1, h2, h3, h4 {
   transform: translateY(20px);
 }
 
+.hero__status {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 .hero__cta {
   display: flex;
   gap: var(--space-sm);

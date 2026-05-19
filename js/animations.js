@@ -28,6 +28,7 @@ function initHeroAnimation() {
     .to(".hero__title-wrap", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.5")
     .to(".hero__bio",        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.4")
     .to(".hero__cta",        { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.4")
+    .to(".hero__status",     { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.3")
     .from(".scroll-hint",    { opacity: 0, duration: 1, ease: "power2.out" }, "-=0.2")
     .add(() => initTypewriter(), "-=1.5");
 
