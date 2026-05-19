@@ -997,6 +997,35 @@ h1, h2, h3, h4 {
   transform: translateX(6px);
 }
 
+.resume-text {
+  display: inline;
+}
+
+.resume-loading {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+#resume-link.is-loading .resume-text {
+  display: none;
+}
+
+#resume-link.is-loading .resume-loading {
+  display: inline;
+  opacity: 1;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .contact__particles {
   position: absolute;
   inset: 0;

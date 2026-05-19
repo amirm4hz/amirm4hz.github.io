@@ -135,6 +135,20 @@ document.querySelectorAll(".nav__link").forEach(link => {
 
 
 /* ─────────────────────────────────────────────
+   RESUME DOWNLOAD INDICATOR
+───────────────────────────────────────────── */
+const resumeLink = document.getElementById("resume-link");
+if (resumeLink) {
+  resumeLink.addEventListener("click", () => {
+    resumeLink.classList.add("is-loading");
+    setTimeout(() => {
+      resumeLink.classList.remove("is-loading");
+    }, 2000);
+  });
+}
+
+
+/* ─────────────────────────────────────────────
    CONTACT FORM
 ───────────────────────────────────────────── */
 const contactForm = document.getElementById("contactForm");
