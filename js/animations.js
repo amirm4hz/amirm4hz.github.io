@@ -2,7 +2,6 @@
    animations.js — Amir Mahdian Portfolio
 ═══════════════════════════════════════════════ */
 
-gsap.registerPlugin(ScrollTrigger);
 
 const animationCleanupTasks = [];
 function cleanupAnimations() {
@@ -12,7 +11,6 @@ function cleanupAnimations() {
 window.addEventListener('beforeunload', cleanupAnimations);
 window.addEventListener('pagehide', cleanupAnimations);
 
-ScrollTrigger.defaults({ scroller: "#scrollContainer" });
 
 
 /* ─────────────────────────────────────────────
@@ -162,20 +160,21 @@ function initStarParallax() {
   document.addEventListener('mousemove', handleMouseMove);
 
   let parallaxRafId = null;
-  // Smooth lerp loop — runs every frame
+  let lastX = 0, lastY = 0;
+
   function parallaxLoop() {
-    // Lerp toward target — 0.06 = smooth lag
     currentX += (targetX - currentX) * 0.06;
     currentY += (targetY - currentY) * 0.06;
 
-    const strength = 28; // max pixel shift at full mouse deflection
-
-    stars.forEach(star => {
-      const depth = parseFloat(star.dataset.depth);
-      const moveX = currentX * strength * depth;
-      const moveY = currentY * strength * depth;
-      star.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
+    if (Math.abs(currentX - lastX) > 0.01 || Math.abs(currentY - lastY) > 0.01) {
+      const strength = 28;
+      stars.forEach(star => {
+        const depth = parseFloat(star.dataset.depth);
+        star.style.transform = `translate(${currentX * strength * depth}px, ${currentY * strength * depth}px)`;
+      });
+      lastX = currentX;
+      lastY = currentY;
+    }
 
     parallaxRafId = requestAnimationFrame(parallaxLoop);
   }
@@ -187,7 +186,6 @@ function initStarParallax() {
 
   parallaxLoop();
 }
-
 
 /* ─────────────────────────────────────────────
    SHOOTING STARS
@@ -324,12 +322,23 @@ function initParticles() {
 /* ─────────────────────────────────────────────
    INIT
 ───────────────────────────────────────────── */
+function onGsapReady(fn) {
+  if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+    fn();
+  } else {
+    // Poll every 50ms — GSAP not yet parsed (slow mobile CDN)
+    setTimeout(() => onGsapReady(fn), 50);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  // Start the hero animation quickly once the DOM is ready.
-  initHeroAnimation();
-  // Start starfield and parallax early on mobile (no external resources needed)
-  initStarfield();
-  initStarParallax();
+  initStarfield();      // no GSAP dependency, runs immediately
+  initStarParallax();   // no GSAP dependency, runs immediately
+  onGsapReady(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.defaults({ scroller: "#scrollContainer" });
+    initHeroAnimation();
+  });
 });
 
 window.addEventListener("load", () => {

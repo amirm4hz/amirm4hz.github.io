@@ -17,7 +17,7 @@ function cleanupAll() {
 window.addEventListener("beforeunload", cleanupAll);
 window.addEventListener("pagehide", cleanupAll);
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   setTimeout(() => {
     loader.classList.add("is-hidden");
   }, 200);
@@ -42,8 +42,8 @@ document.addEventListener("mousemove", (e) => {
 
 let outlineRafId = null;
 function animateOutline() {
-  outlineX += (dotX - outlineX) * 0.14;
-  outlineY += (dotY - outlineY) * 0.14;
+  outlineX += (dotX - outlineX) * 0.22;
+  outlineY += (dotY - outlineY) * 0.22;
   cursorOutline.style.left = outlineX + "px";
   cursorOutline.style.top  = outlineY + "px";
   outlineRafId = requestAnimationFrame(animateOutline);
@@ -592,8 +592,8 @@ function initSkillBubbles() {
     const release = () => {
       if (dragging) {
         // Throw with mouse velocity — clamped so it doesn't go insane
-        dragging.vx = Math.max(-12, Math.min(12, mouseVel.x * 1.1));
-        dragging.vy = Math.max(-12, Math.min(12, mouseVel.y * 1.1));
+        dragging.vx = Math.max(-20, Math.min(20, mouseVel.x * 1.6));
+        dragging.vy = Math.max(-20, Math.min(20, mouseVel.y * 1.6));
         dragging = null;
       }
       mouse = { x: -9999, y: -9999 };
@@ -653,8 +653,8 @@ function initSkillBubbles() {
         // Speed cap + friction
         const spd = Math.hypot(b.vx, b.vy);
         if (spd > 10) { b.vx *= 10 / spd; b.vy *= 10 / spd; }
-        b.vx *= 0.992;
-        b.vy *= 0.992;
+        b.vx *= 0.998;
+        b.vy *= 0.998;
       });
 
       // Elastic collision — no overlap, proper billiard-ball bounce
