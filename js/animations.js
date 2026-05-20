@@ -327,11 +327,12 @@ function initParticles() {
 document.addEventListener("DOMContentLoaded", () => {
   // Start the hero animation quickly once the DOM is ready.
   initHeroAnimation();
+  // Start starfield and parallax early on mobile (no external resources needed)
+  initStarfield();
+  initStarParallax();
 });
 
 window.addEventListener("load", () => {
-  initStarfield();
-  initStarParallax();
   initAboutAnimation();
   initProjectsAnimation();
   initSkillsAnimation();

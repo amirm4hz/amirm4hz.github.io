@@ -789,5 +789,5 @@ function initSkillBubbles() {
 }
 
 window.addEventListener('load', () => {
-  setTimeout(initSkillBubbles, 500);
+  initSkillBubbles();
 });
