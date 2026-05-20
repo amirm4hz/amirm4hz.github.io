@@ -17,10 +17,10 @@ function cleanupAll() {
 window.addEventListener("beforeunload", cleanupAll);
 window.addEventListener("pagehide", cleanupAll);
 
-document.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   setTimeout(() => {
     loader.classList.add("is-hidden");
-  }, 800); 
+  }, 900);
 });
 
 
